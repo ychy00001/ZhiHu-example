@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!--*******************************-白天-********************************-->
+    <color name="defaultBackground_light">#ffffff</color>
+    <color name="defaultTextColor_light">#000000</color>
+    <!--条目-->
+    <color name="item_bg_def_light">#ffffff</color>
+    <color name="light_item_bg_press_light">#444444</color>
+    <!--头部ToolBar条-->
+    <color name="toolbar_bg_color_light">#27adec</color>
+
+
+
+
+    <!--*******************************-黑夜-********************************-->
+    <color name="defaultBackground_dark">#222222</color>
+    <color name="defaultTextColor_dark">#ffffff</color>
+    <!--条目-->
+    <color name="item_bg_def_dark">#444444</color>
+    <color name="light_item_bg_press_dark">#888888</color>
+    <!--头部ToolBar条-->
+    <color name="toolbar_bg_color_dark">#000000</color>
+
+
+
+
+    <!--颜色定义-->
+    <color name="transparent">#00000000</color>
+    <color name="color_gray_light">#666666</color>
+    <color name="color_gray_dark">#999999</color>
+
+</resources>

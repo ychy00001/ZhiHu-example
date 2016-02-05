@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="30dp"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/base_swipe_group_item_time"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="?text_color_gray"
+        android:gravity="center_vertical"
+        android:text="标题日期"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--**************start! 自定义白天 夜间主题***********-->
+    <!--application主题-->
+    <style name="AppTheme.NoActionBar">
+        <item name="colorPrimary">#673AB7</item>
+        <item name="colorPrimaryDark">#512DA8</item>
+        <item name="colorAccent">#FF4081</item>
+        <item name="android:textSize">18sp</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!--application主题设置透明背景  需要每个Activity都有自己的背景定义
+        已注释 因为有可能启动的时候背景图上的文字先显示出来 用户体验也不高
+            <item name="android:windowIsTranslucent">true</item>
+            <item name="android:windowBackground">@color/transparent</item>
+        -->
+        <!--整体页面主题-->
+        <item name="ThemeBackgroundColor">@color/defaultBackground_light</item>
+        <item name="ThemeTextColor">@color/defaultTextColor_light</item>
+        <item name="toolBar_gb_color">@color/toolbar_bg_color_light</item>
+
+        <!--通用-->
+        <item name="text_color_gray">@color/color_gray_light</item>
+
+        <!--条目-->
+        <item name="selectorListItem">@drawable/item_bg_select_light</item>
+        <item name="titleColor">@color/defaultTextColor_light</item>
+    </style>
+
+    <!--白天-->
+    <style name="AppTheme.Light" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/defaultBackground_light</item>
+        <!--整体页面主题-->
+        <item name="ThemeBackgroundColor">@color/defaultBackground_light</item>
+        <item name="ThemeTextColor">@color/defaultTextColor_light</item>
+        <item name="toolBar_gb_color">@color/toolbar_bg_color_light</item>
+
+
+        <!--通用-->
+        <item name="text_color_gray">@color/color_gray_light</item>
+
+        <!--条目-->
+        <item name="selectorListItem">@drawable/item_bg_select_light</item>
+        <item name="titleColor">@color/defaultTextColor_light</item>
+
+    </style>
+
+    <!--黑夜-->
+    <style name="AppTheme.Dark" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/defaultBackground_dark</item>
+        <!--整体页面主题-->
+        <item name="ThemeBackgroundColor">@color/defaultBackground_dark</item>
+        <item name="ThemeTextColor">@color/defaultTextColor_dark</item>
+        <item name="toolBar_gb_color">@color/toolbar_bg_color_dark</item>
+        <!--通用-->
+        <item name="text_color_gray">@color/color_gray_dark</item>
+
+        <!--条目-->
+        <item name="selectorListItem">@drawable/item_bg_select_dark</item>
+        <item name="titleColor">@color/defaultTextColor_dark</item>
+    </style>
+
+    <!--**************end! 自定义白天 夜间主题***********-->
+
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        tools:ignore = "ContentDescription" />
+
+    <!--启动页底部文字-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        android:background="@drawable/shape_home_head_bg"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:padding="45dp"
+        android:text="小镇日报"/>
+
+    <TextView
+        android:id="@+id/tv_splsah_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#ffffff"
+        android:paddingBottom="10dp"
+        android:textSize="15sp"
+        android:text="\@小镇工作室"/>
+
+</RelativeLayout>

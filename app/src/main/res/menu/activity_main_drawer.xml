@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_head" android:icon="@mipmap/ic_menu_home" android:title="首页" />
+
+        <item android:id="@+id/nav_psychology"
+              android:title="日常心理学"
+            />
+        <item android:id="@+id/nav_recommend"
+              android:title="用户推荐日报"
+            />
+        <item android:id="@+id/nav_unbored"
+              android:title="不许无聊" />
+        <item android:id="@+id/nav_move"
+              android:title="电影日报"
+            />
+        <item android:id="@+id/nav_design"
+              android:title="设计日报"
+            />
+        <item android:id="@+id/nav_company"
+              android:title="大公司日报"
+            />
+        <item android:id="@+id/nav_financial"
+              android:title="财经日报"
+            />
+        <item android:id="@+id/nav_net_safe"
+              android:title="互联网安全"
+            />
+        <item android:id="@+id/nav_start_game"
+              android:title="开始游戏"
+            />
+        <item android:id="@+id/nav_music"
+              android:title="音乐日报"
+            />
+        <item android:id="@+id/nav_cartoon"
+              android:title="卡通日报"
+            />
+        <item android:id="@+id/nav_sport"
+              android:title="体育日报"
+            />
+    </group>
+
+</menu>

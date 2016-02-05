@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主题背景属性-->
+    <attr name="ThemeBackgroundColor" format="color" />
+    <!--主题文字属性-->
+    <attr name="ThemeTextColor" format="color" />
+    <!-- 主题Toolbar属性-->
+    <attr name="toolBar_gb_color" format="color" />
+
+    <!--list条目背景点击-->
+    <attr name="selectorListItem" format="reference" />
+    <!--list文字颜色-->
+    <attr name="titleColor" format="color" />
+
+    <!--通用文字颜色-->
+    <attr name="text_color_gray" format="color" />
+
+</resources>
