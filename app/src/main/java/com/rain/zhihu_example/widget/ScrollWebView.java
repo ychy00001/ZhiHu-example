@@ -27,7 +27,7 @@ public class ScrollWebView extends WebView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         if (mScrollListener != null) {
-            mScrollListener.onScroll(l - oldl, t - oldt,oldl,oldt);
+            mScrollListener.onScroll(l, t,oldl,oldt);
         }
     }
 
@@ -39,6 +39,7 @@ public class ScrollWebView extends WebView {
     }
 
     public interface OnScrollChangeListener {
-        void onScroll(int dx, int dy,int oldLeft ,int oldTop);
+        //如果需要dy dx  只需 newTop-oldTop newLeft-oldLeft  dy>0 向上滑动 dy<0向下滑动
+        void onScroll(int newLeft, int newTop,int oldLeft ,int oldTop);
     }
 }

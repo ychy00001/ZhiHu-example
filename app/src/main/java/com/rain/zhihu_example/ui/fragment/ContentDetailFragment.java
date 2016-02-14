@@ -3,6 +3,7 @@ package com.rain.zhihu_example.ui.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,10 +36,11 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     @Bind(R.id.webView) ScrollWebView mWebView;
     @Bind(R.id.toolbar) Toolbar mToolBar;
-    @Bind(R.id.titleLayout) RelativeLayout mTitleLayout;//头布局 包括文字 图片
+    @Bind(R.id.titleLayout) RelativeLayout mImgLayout;//头布局 包括文字 图片
     @Bind(R.id.img_title) ImageView mTitleImg;
     @Bind(R.id.tv_title) TextView mTitleText;
     @Bind(R.id.tv_author) TextView mAuthorText;
+    @Bind(R.id.layout_content) RelativeLayout mContentLayout;
 
     private String storyId;
     private ContentDetailPresent mPresent;
@@ -61,9 +63,9 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTitleLayout.measure(0,0);
+        mImgLayout.measure(0,0);
         mToolBar.measure(0,0);
-        titleImgHeight = mTitleLayout.getMeasuredHeight();
+        titleImgHeight = mImgLayout.getMeasuredHeight();
         titleHeight = titleImgHeight+mToolBar.getMeasuredHeight() ;
 
         WebSettings mWebSettings = mWebView.getSettings();
@@ -112,24 +114,34 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
      */
     private class MyScrollListener implements ScrollWebView.OnScrollChangeListener{
 
+        RelativeLayout.LayoutParams imgParam;
+        CoordinatorLayout.LayoutParams contentParam;
         @Override
-        public void onScroll(int dx, int dy, int oldLeft,int oldTop) {
-            RelativeLayout.LayoutParams titleParam =
-                    (RelativeLayout.LayoutParams)mTitleLayout
+        public void onScroll(int newLeft, int newTop, int oldLeft,int oldTop) {
+            int dy = newTop - oldTop;
+            imgParam = (RelativeLayout.LayoutParams)mImgLayout
                             .getLayoutParams();
-            System.out.println("margin"+titleParam.topMargin);
-            if(oldTop+dy <= titleHeight){
-                if(titleParam.topMargin <= 0 && dy >0){
-                    titleParam.topMargin -= dy;
-                    titleParam.height -= dy;
-                    System.out.println("向上margin:"+titleParam.topMargin);
-                }else if(titleParam.topMargin < 0 && dy < 0){
-                    titleParam.topMargin -= dy;
-                    titleParam.height -= dy;
-                    System.out.println("向下margin"+titleParam.topMargin);
-                }
+            contentParam = (CoordinatorLayout.LayoutParams)mContentLayout
+                            .getLayoutParams();
+            System.out.println("topMargin:"+contentParam.topMargin);
+            //新滑动高度小于实际的头布局的高度 则需要进行高度处理
+            System.out.println("newTop:"+newTop+"titleHeight:"+titleHeight);
+            if(newTop>0 && newTop < titleHeight){
+                System.out.println("更改界面");
+                    imgParam.height -= dy;
+                    contentParam.topMargin -=dy;
+            }else if(newTop == 0){//如果新的高度等于0 则显示完整的高度
+                System.out.println("重置界面 完全显示");
+                imgParam.height = titleImgHeight;
+
+                contentParam.topMargin = 0;
+            }else{//否则置为0
+                System.out.println("隐藏头布局");
+                imgParam.height = 0;
+                contentParam.topMargin = -titleImgHeight;
             }
-            mTitleLayout.setLayoutParams(titleParam);
+            mImgLayout.setLayoutParams(imgParam);
+            mContentLayout.setLayoutParams(contentParam);
         }
     }
     /**
