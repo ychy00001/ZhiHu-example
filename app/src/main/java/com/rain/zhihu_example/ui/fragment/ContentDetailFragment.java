@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.Bind;
+import com.nineoldandroids.view.ViewHelper;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.api.Apis;
 import com.rain.zhihu_example.global.Constances;
@@ -33,6 +34,9 @@ import com.squareup.picasso.Picasso;
 public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     public static final String TAG = "ContentDetailFragment";
+    public static final int COLOR_TOOL_BAR = 0xFF27ADEC;
+    public static final int COLOR_TOOL_BAR_TRANS = 0x0027ADEC;
+
 
     @Bind(R.id.webView) ScrollWebView mWebView;
     @Bind(R.id.toolbar) Toolbar mToolBar;
@@ -44,7 +48,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     private String storyId;
     private ContentDetailPresent mPresent;
-    private int titleHeight;//头布局的高度
+//    private int titleHeight;//头布局的高度
     private int titleImgHeight;//头部imgView的高度
 
 
@@ -64,9 +68,9 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mImgLayout.measure(0,0);
-        mToolBar.measure(0,0);
+        mContentLayout.measure(0,0);
         titleImgHeight = mImgLayout.getMeasuredHeight();
-        titleHeight = titleImgHeight+mToolBar.getMeasuredHeight() ;
+
 
         WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setBlockNetworkImage(true);
@@ -115,35 +119,67 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     private class MyScrollListener implements ScrollWebView.OnScrollChangeListener{
 
         RelativeLayout.LayoutParams imgParam;
-        CoordinatorLayout.LayoutParams contentParam;
+        CoordinatorLayout.LayoutParams contentParam = (CoordinatorLayout.LayoutParams)mContentLayout
+        .getLayoutParams();
+        int topMargin = contentParam.topMargin;
+        int nowHeight = 0;//由于改变内容布局的marginTop 会影响onScroll的newTop数值
+        int oldHeight = 0;//记录上个高度
         @Override
         public void onScroll(int newLeft, int newTop, int oldLeft,int oldTop) {
             int dy = newTop - oldTop;
+
+            oldHeight = nowHeight;
+            nowHeight += dy;
             imgParam = (RelativeLayout.LayoutParams)mImgLayout
                             .getLayoutParams();
-            contentParam = (CoordinatorLayout.LayoutParams)mContentLayout
-                            .getLayoutParams();
-            System.out.println("topMargin:"+contentParam.topMargin);
-            //新滑动高度小于实际的头布局的高度 则需要进行高度处理
-            System.out.println("newTop:"+newTop+"titleHeight:"+titleHeight);
-            if(newTop>0 && newTop < titleHeight){
-                System.out.println("更改界面");
-                    imgParam.height -= dy;
-                    contentParam.topMargin -=dy;
-            }else if(newTop == 0){//如果新的高度等于0 则显示完整的高度
-                System.out.println("重置界面 完全显示");
-                imgParam.height = titleImgHeight;
+            System.out.println("dy:"+dy);
+            System.out.println("oldHeight:"+oldHeight+"  newHeight:"+nowHeight);
 
-                contentParam.topMargin = 0;
-            }else{//否则置为0
-                System.out.println("隐藏头布局");
+            //新滑动高度小于实际的头布局的高度 则需要进行高度处理
+            if(nowHeight>=0 && nowHeight < titleImgHeight){
+                if((imgParam.height-dy)<=titleImgHeight
+                        && (imgParam.height-dy)>= 0){
+                    imgParam.height -= dy;
+                }else if((imgParam.height-dy)>titleImgHeight){
+                    imgParam.height = titleImgHeight;
+                }else{
+                    imgParam.height = 0;
+                }
+
+//                if(dy%2 != 0){
+//                    dy = dy/2+1;
+//                }else{
+//                    dy = dy/2;
+//                }
+
+                if((contentParam.topMargin - dy)<=topMargin
+                        && (contentParam.topMargin-dy)>= 0){
+                    contentParam.topMargin -= dy;
+                    float percent = contentParam.topMargin * 1.0f / topMargin;
+                    ViewHelper.setAlpha(mToolBar,percent);
+                }else if((contentParam.topMargin- dy)>topMargin){
+                    contentParam.topMargin = topMargin;
+                    ViewHelper.setAlpha(mToolBar,1);
+                }else{
+                    contentParam.topMargin = 0;
+                    ViewHelper.setAlpha(mToolBar,0);
+                }
+
+            }else if(nowHeight == 0){//如果新的高度等于0 则显示完整的高度
+                //                System.out.println("重置界面 完全显示");
+                imgParam.height = titleImgHeight;
+                contentParam.topMargin = topMargin;
+            }else if(nowHeight >= titleImgHeight) {//否则置为0
+                //                System.out.println("隐藏头布局");
                 imgParam.height = 0;
-                contentParam.topMargin = -titleImgHeight;
+                contentParam.topMargin = 0;
             }
             mImgLayout.setLayoutParams(imgParam);
             mContentLayout.setLayoutParams(contentParam);
+            mContentLayout.requestLayout();
         }
     }
+
     /**
      * WebView的具体处理
      */
@@ -169,4 +205,6 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
             return super.shouldOverrideUrlLoading(view, url);
         }
     }
+
+
 }
