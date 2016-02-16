@@ -74,7 +74,10 @@ public class StoryBean {
 
     public void setCss(List<String> css) { this.css = css;}
 
-    public String getBody() { return body;}
+    public String getBody() {
+        String add = "</br></br></br>";
+//        String add = "";
+        return add+body;}
 
     public String getImage_source() { return image_source;}
 

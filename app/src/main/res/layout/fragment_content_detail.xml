@@ -5,13 +5,9 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-<!--android:background="?attr/toolBar_gb_color"
- app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-
 
     <RelativeLayout
         android:id="@+id/layout_content"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,48 +18,63 @@
             android:layout_height="match_parent">
         </com.rain.zhihu_example.widget.ScrollWebView>
 
-        <RelativeLayout
-            android:visibility="visible"
+
+        <LinearLayout
             android:id="@+id/titleLayout"
+            android:visibility="visible"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <ImageView
-                android:id="@+id/img_title"
-                android:scaleType="centerCrop"
+            android:layout_height="256dp">
+            <View
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="?attr/actionBarSize"/>
 
             <RelativeLayout
+                android:layout_weight="1"
+                android:id="@+id/imgLayout"
+                android:visibility="visible"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/shape_home_head_bg"
-                android:layout_marginTop="100dp">
+                android:layout_height="200dp">
 
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
-                    android:text="标题"
-                    android:textSize="22sp"/>
+                <ImageView
+                    android:id="@+id/img_title"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
 
-                <TextView
-                    android:id="@+id/tv_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="75dp"
-                    android:layout_marginRight="20dp"
-                    android:textColor="#cccccc"
-                    android:text="作者"
-                    android:textSize="10sp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/shape_home_head_bg"
+                    android:layout_marginTop="100dp">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:text="标题"
+                        android:textSize="22sp"/>
+
+                    <TextView
+                        android:id="@+id/tv_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="75dp"
+                        android:layout_marginRight="20dp"
+                        android:textColor="#cccccc"
+                        android:text="作者"
+                        android:textSize="10sp"/>
+                </RelativeLayout>
             </RelativeLayout>
-        </RelativeLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 
     <android.support.design.widget.AppBarLayout

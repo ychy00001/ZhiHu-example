@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.*;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -40,16 +41,17 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     @Bind(R.id.webView) ScrollWebView mWebView;
     @Bind(R.id.toolbar) Toolbar mToolBar;
-    @Bind(R.id.titleLayout) RelativeLayout mImgLayout;//头布局 包括文字 图片
+    @Bind(R.id.titleLayout) LinearLayout mTitleLayout;//外部布局 头布局 包括文字 图片
     @Bind(R.id.img_title) ImageView mTitleImg;
     @Bind(R.id.tv_title) TextView mTitleText;
     @Bind(R.id.tv_author) TextView mAuthorText;
     @Bind(R.id.layout_content) RelativeLayout mContentLayout;
+    @Bind(R.id.imgLayout) RelativeLayout mTitleImgLayout;//内部布局 包括文字 图片
 
     private String storyId;
     private ContentDetailPresent mPresent;
-//    private int titleHeight;//头布局的高度
     private int titleImgHeight;//头部imgView的高度
+    private int titleBarHeight;
 
 
     public static ContentDetailFragment newInstance(Bundle bundle) {
@@ -67,10 +69,11 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mImgLayout.measure(0,0);
+        mTitleLayout.measure(0,0);
         mContentLayout.measure(0,0);
-        titleImgHeight = mImgLayout.getMeasuredHeight();
-
+        mToolBar.measure(0,0);
+        titleImgHeight = mTitleLayout.getMeasuredHeight();
+        titleBarHeight = mToolBar.getMeasuredHeight();
 
         WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setBlockNetworkImage(true);
@@ -118,65 +121,46 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
      */
     private class MyScrollListener implements ScrollWebView.OnScrollChangeListener{
 
-        RelativeLayout.LayoutParams imgParam;
+        RelativeLayout.LayoutParams titleParam = (RelativeLayout.LayoutParams) mTitleLayout
+                .getLayoutParams();
         CoordinatorLayout.LayoutParams contentParam = (CoordinatorLayout.LayoutParams)mContentLayout
         .getLayoutParams();
-        int topMargin = contentParam.topMargin;
         int nowHeight = 0;//由于改变内容布局的marginTop 会影响onScroll的newTop数值
         int oldHeight = 0;//记录上个高度
+
         @Override
         public void onScroll(int newLeft, int newTop, int oldLeft,int oldTop) {
-            int dy = newTop - oldTop;
+            float dy = (newTop - oldTop);
 
             oldHeight = nowHeight;
             nowHeight += dy;
-            imgParam = (RelativeLayout.LayoutParams)mImgLayout
-                            .getLayoutParams();
-            System.out.println("dy:"+dy);
-            System.out.println("oldHeight:"+oldHeight+"  newHeight:"+nowHeight);
-
             //新滑动高度小于实际的头布局的高度 则需要进行高度处理
-            if(nowHeight>=0 && nowHeight < titleImgHeight){
-                if((imgParam.height-dy)<=titleImgHeight
-                        && (imgParam.height-dy)>= 0){
-                    imgParam.height -= dy;
-                }else if((imgParam.height-dy)>titleImgHeight){
-                    imgParam.height = titleImgHeight;
-                }else{
-                    imgParam.height = 0;
-                }
+            if(nowHeight>=0 && nowHeight <= titleImgHeight){
 
-//                if(dy%2 != 0){
-//                    dy = dy/2+1;
-//                }else{
-//                    dy = dy/2;
-//                }
-
-                if((contentParam.topMargin - dy)<=topMargin
-                        && (contentParam.topMargin-dy)>= 0){
-                    contentParam.topMargin -= dy;
-                    float percent = contentParam.topMargin * 1.0f / topMargin;
+                if((titleParam.height-dy)<=titleImgHeight
+                        && (titleParam.height-dy)>= 0){
+                    titleParam.height -= dy;
+                    float percent = titleParam.height * 1.0f / titleImgHeight;
+                    if(percent > 0.2f){
+                        percent -= 0.2f;
+                    }else{
+                        percent = 0;
+                    }
                     ViewHelper.setAlpha(mToolBar,percent);
-                }else if((contentParam.topMargin- dy)>topMargin){
-                    contentParam.topMargin = topMargin;
+                }else if((titleParam.height-dy) > titleImgHeight){
+                    titleParam.height = titleImgHeight;
                     ViewHelper.setAlpha(mToolBar,1);
                 }else{
-                    contentParam.topMargin = 0;
+                    titleParam.height = 0;
                     ViewHelper.setAlpha(mToolBar,0);
                 }
-
-            }else if(nowHeight == 0){//如果新的高度等于0 则显示完整的高度
-                //                System.out.println("重置界面 完全显示");
-                imgParam.height = titleImgHeight;
-                contentParam.topMargin = topMargin;
+            }else if(nowHeight == 0){//如果新的高度等于0 则显示完整的高度 还原
+                titleParam.height = titleImgHeight;
             }else if(nowHeight >= titleImgHeight) {//否则置为0
-                //                System.out.println("隐藏头布局");
-                imgParam.height = 0;
-                contentParam.topMargin = 0;
+                titleParam.height = 0;
             }
-            mImgLayout.setLayoutParams(imgParam);
+            mTitleLayout.setLayoutParams(titleParam);
             mContentLayout.setLayoutParams(contentParam);
-            mContentLayout.requestLayout();
         }
     }
 
