@@ -76,7 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.activity_zoomin, R.anim.activity_zoomout);
                 break;
             case TRANS_TYPE_TRANSLATE:
-                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                overridePendingTransition(R.anim.activity_in_translate_horizontal_anim,R.anim.activity_out_translate_horizontal_anim);
                 break;
         }
 
@@ -95,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.activity_zoomout,R.anim.activity_zoomin);
                 break;
             case TRANS_TYPE_TRANSLATE:
-                overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                overridePendingTransition(R.anim.activity_exit_in_translate_horizontal_anim,R.anim.activity_exit_translate_horizontal_anim);
                 break;
         }
 

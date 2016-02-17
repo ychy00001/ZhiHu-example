@@ -3,6 +3,7 @@ package com.rain.zhihu_example.ui.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -37,6 +38,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
     private Context mContext;
 
     private TextView mTvSplsahText;
+    private TextView mTitle;
 
     @Override
     protected int setContentLayout() {
@@ -143,7 +145,8 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                         public void run() {
                             String imgUrl = splashMode.getImg();
                             String text = splashMode.getText();
-                            Picasso.with(RainApplication.getContext()).load(imgUrl).into(mImgStart);
+                            Picasso.with(RainApplication.getContext()).load(imgUrl).error(R.mipmap.splash).into(mImgStart);
+                            mTitle.setVisibility(View.VISIBLE);
                             if (!TextUtils.isEmpty(text)) {
                                 mTvSplsahText.setText(text);
                             }
@@ -157,6 +160,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                 CommonUtil.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
+                        mTitle.setVisibility(View.VISIBLE);
                         mImgStart.setImageResource(R.mipmap.splash);
                     }
                 });
@@ -171,6 +175,8 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
     private void assignViews() {
         mImgStart = (ImageView) findViewById(R.id.img_start);
         mTvSplsahText = (TextView) findViewById(R.id.tv_splsah_text);
+        mTitle = (TextView) findViewById(R.id.tv_title);
+        mTitle.setVisibility(View.GONE);
     }
 
     /**

@@ -1,19 +1,21 @@
 package com.rain.zhihu_example.ui.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import butterknife.OnClick;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
-import com.rain.zhihu_example.util.SnackUtil;
 import com.rain.zhihu_example.util.ToastUtil;
 
 
@@ -25,6 +27,7 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("FieldCanBeLocal") private DrawerLayout mDrawer;
     @SuppressWarnings("FieldCanBeLocal") private NavigationView mNavigationView;
     private MainFragment mFragment;
+    private ImageView mLoginImg;
 
     @Override
     protected int setContentLayout() {
@@ -56,6 +59,7 @@ public class MainActivity extends BaseActivity
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mLoginImg = (ImageView) findViewById(R.id.imageView);
 
         setSupportActionBar(mToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,11 +76,25 @@ public class MainActivity extends BaseActivity
      */
     @OnClick(R.id.fab)
     void fabClick(){
-        SnackUtil.showMessage(mFab, "点击浮动按钮");
+        showExitDialog();
+    }
+
+    private void showExitDialog() {AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("真的要退出啊？");
+        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity.this.finish();
+            }
+        });
+        builder.setNegativeButton("再看看", null);
+        builder.setCancelable(false);
+        builder.create().show();
     }
 
 
-/*****************************整体界面设置************************************/
+    /*****************************整体界面设置************************************/
     /**
      * 设置ToolBar上面的文字
      * @param text 所要显示的文字
@@ -91,7 +109,7 @@ public class MainActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            showExitDialog();
         }
     }
 

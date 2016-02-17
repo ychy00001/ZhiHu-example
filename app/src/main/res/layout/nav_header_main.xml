@@ -14,9 +14,9 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/sym_def_app_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/user_default_avatar"
             />
 
         <TextView
@@ -44,7 +44,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@mipmap/star_friendly_empty"/>
+                android:src="@mipmap/abc_btn_rating_star_on_mtrl_alpha"/>
 
             <TextView
                 android:layout_marginLeft="20dp"
@@ -65,7 +65,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@mipmap/vote_down_normal"/>
+                android:src="@mipmap/vote_down_pressed"/>
 
             <TextView
                 android:layout_marginLeft="20dp"

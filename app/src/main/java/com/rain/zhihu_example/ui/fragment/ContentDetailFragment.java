@@ -1,14 +1,14 @@
 package com.rain.zhihu_example.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.webkit.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,13 +20,12 @@ import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.api.Apis;
 import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.present.ContentDetailPresent;
+import com.rain.zhihu_example.ui.activity.ContentDetailActivity;
 import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.ui.view.StoryView;
 import com.rain.zhihu_example.util.BuildConfigUtil;
 import com.rain.zhihu_example.widget.ScrollWebView;
 import com.squareup.picasso.Picasso;
-
-import java.math.BigDecimal;
 
 /**
  * 内容详情页面
@@ -37,12 +36,8 @@ import java.math.BigDecimal;
 public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     public static final String TAG = "ContentDetailFragment";
-    public static final int COLOR_TOOL_BAR = 0xFF27ADEC;
-    public static final int COLOR_TOOL_BAR_TRANS = 0x0027ADEC;
-
 
     @Bind(R.id.webView) ScrollWebView mWebView;
-    @Bind(R.id.toolbar) Toolbar mToolBar;
     @Bind(R.id.titleLayout) LinearLayout mTitleLayout;//外部布局 头布局 包括文字 图片
     @Bind(R.id.img_title) ImageView mTitleImg;
     @Bind(R.id.tv_title) TextView mTitleText;
@@ -51,9 +46,9 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Bind(R.id.imgLayout) RelativeLayout mTitleImgLayout;//内部布局 包括文字 图片
 
     private String storyId;
+    private Toolbar mToolBar;
     private ContentDetailPresent mPresent;
     private int titleImgHeight;//头部imgView的高度
-    private int titleBarHeight;
 
 
     public static ContentDetailFragment newInstance(Bundle bundle) {
@@ -73,9 +68,8 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         super.onViewCreated(view, savedInstanceState);
         mTitleLayout.measure(0,0);
         mContentLayout.measure(0,0);
-        mToolBar.measure(0,0);
         titleImgHeight = mTitleLayout.getMeasuredHeight();
-        titleBarHeight = mToolBar.getMeasuredHeight();
+        mToolBar = ((ContentDetailActivity)getActivity()).getToolbar();
 
         WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setBlockNetworkImage(true);
@@ -138,7 +132,6 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
             nowHeight += dy;
             //新滑动高度小于实际的头布局的高度 则需要进行高度处理
             if(nowHeight>=0 && nowHeight <= titleImgHeight){
-
                 if((titleParam.height-dy)<=titleImgHeight
                         && (titleParam.height-dy)>= 0){
                     titleParam.height -= dy;
@@ -149,7 +142,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
                         percent = 0;
                     }
                     ViewHelper.setAlpha(mToolBar,percent);
-                }else if((titleParam.height-dy) > titleImgHeight){
+                }else if((titleParam.height-dy) > titleImgHeight){//处理滑动速度过快 一下超出头部高度
                     titleParam.height = titleImgHeight;
                     ViewHelper.setAlpha(mToolBar,1);
                 }else{
@@ -188,9 +181,16 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return super.shouldOverrideUrlLoading(view, url);
+            Uri uri = Uri.parse(url);
+            Intent intent = new  Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
         }
     }
 
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 }

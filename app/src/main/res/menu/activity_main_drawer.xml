@@ -4,39 +4,52 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_head" android:icon="@mipmap/ic_menu_home" android:title="首页" />
 
-        <item android:id="@+id/nav_psychology"
-              android:title="日常心理学"
-            />
         <item android:id="@+id/nav_recommend"
+              android:icon="@android:drawable/ic_menu_share"
               android:title="用户推荐日报"
             />
+        <item android:id="@+id/nav_psychology"
+              android:icon="@android:drawable/ic_menu_month"
+              android:title="日常心理学"
+            />
         <item android:id="@+id/nav_unbored"
+              android:icon="@android:drawable/ic_menu_compass"
               android:title="不许无聊" />
+
         <item android:id="@+id/nav_move"
+              android:icon="@android:drawable/ic_menu_upload_you_tube"
               android:title="电影日报"
             />
         <item android:id="@+id/nav_design"
+              android:icon="@android:drawable/ic_menu_compass"
               android:title="设计日报"
             />
         <item android:id="@+id/nav_company"
+              android:icon="@android:drawable/ic_menu_slideshow"
               android:title="大公司日报"
             />
         <item android:id="@+id/nav_financial"
+              android:icon="@android:drawable/ic_menu_rotate"
               android:title="财经日报"
             />
         <item android:id="@+id/nav_net_safe"
+              android:icon="@android:drawable/ic_menu_save"
               android:title="互联网安全"
             />
         <item android:id="@+id/nav_start_game"
+              android:icon="@mipmap/ic_menu_emoticons"
               android:title="开始游戏"
             />
         <item android:id="@+id/nav_music"
+              android:icon="@android:drawable/ic_menu_mapmode"
               android:title="音乐日报"
             />
         <item android:id="@+id/nav_cartoon"
+              android:icon="@android:drawable/ic_menu_directions"
               android:title="卡通日报"
             />
         <item android:id="@+id/nav_sport"
+              android:icon="@android:drawable/ic_menu_myplaces"
               android:title="体育日报"
             />
     </group>
