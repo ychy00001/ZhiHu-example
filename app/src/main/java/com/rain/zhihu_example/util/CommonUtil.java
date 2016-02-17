@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import com.rain.zhihu_example.global.RainApplication;
 
+import java.math.BigDecimal;
+
 /**
  * Created by yangchunyu
  * on 2015/10/9.
@@ -92,5 +94,32 @@ public class CommonUtil {
                 group.removeView(child);
             }
         }
+    }
+
+    public static String formatVideoPlayCount(int playCount) {
+        if (playCount > 999999) {
+            double midCount = (double) playCount / 10000;
+            float lastCount = getRoundFloat(midCount, 1);
+            if(lastCount >= 1000){
+                return  "1000万";
+            }
+            return lastCount + "万";
+        } else {
+            return playCount+"";
+        }
+    }
+    /**
+     * 将double类型的数字转换为四舍五入的float型数字
+     *
+     * @param value 要转换的数字
+     * @param limit 要保留小数点的位数
+     *
+     * @return 格式化后的float型数字
+     */
+    public static Float getRoundFloat(double value, int limit) {
+        // 此处初始化BigDecimal时,使用BigDecimal(String)方法,否则可能会出现精度丢失
+        BigDecimal bd = new BigDecimal(String.valueOf(value));
+        bd = bd.setScale(limit, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }

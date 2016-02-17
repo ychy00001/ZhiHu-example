@@ -26,6 +26,8 @@ import com.rain.zhihu_example.util.BuildConfigUtil;
 import com.rain.zhihu_example.widget.ScrollWebView;
 import com.squareup.picasso.Picasso;
 
+import java.math.BigDecimal;
+
 /**
  * 内容详情页面
  * Created by yangchunyu
