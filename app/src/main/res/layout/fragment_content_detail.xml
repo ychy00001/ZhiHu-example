@@ -12,7 +12,6 @@
 
         <com.rain.zhihu_example.widget.ScrollWebView
             android:id="@+id/webView"
-            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </com.rain.zhihu_example.widget.ScrollWebView>

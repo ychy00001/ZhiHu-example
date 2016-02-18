@@ -96,6 +96,9 @@ public class CommonUtil {
         }
     }
 
+    /**
+     * 视频播放次数格式化
+     */
     public static String formatVideoPlayCount(int playCount) {
         if (playCount > 999999) {
             double midCount = (double) playCount / 10000;

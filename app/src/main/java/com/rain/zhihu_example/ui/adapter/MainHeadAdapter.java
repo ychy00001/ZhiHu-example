@@ -1,13 +1,18 @@
 package com.rain.zhihu_example.ui.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.rain.zhihu_example.R;
+import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.global.RainApplication;
 import com.rain.zhihu_example.mode.HomeMode;
+import com.rain.zhihu_example.ui.activity.ContentDetailActivity;
+import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.util.CommonUtil;
 import com.squareup.picasso.Picasso;
 
@@ -24,8 +29,10 @@ public class MainHeadAdapter extends PagerAdapter {
 
     private List<HomeMode.TopStoriesEntity> mData;
     private List<View> mViews;
+    private Activity mActivity;
 
-    public MainHeadAdapter(List<HomeMode.TopStoriesEntity> data) {
+    public MainHeadAdapter(List<HomeMode.TopStoriesEntity> data,Activity activity) {
+        this. mActivity = activity;
         update(data);
     }
 
@@ -55,7 +62,7 @@ public class MainHeadAdapter extends PagerAdapter {
         View view = mViews.get(position % mViews.size());
         ImageView imageView = (ImageView) view.findViewById(R.id.iv_focus_img);
         TextView textView = (TextView) view.findViewById(R.id.tv_focus_text);
-        HomeMode.TopStoriesEntity mEntity = mData.get(position % mViews.size());
+        final HomeMode.TopStoriesEntity mEntity = mData.get(position % mViews.size());
         if(mEntity != null){
             textView.setText(mEntity.getTitle());
             Picasso.with(RainApplication.getContext())
@@ -63,6 +70,16 @@ public class MainHeadAdapter extends PagerAdapter {
                     .into(imageView);
         }
         container.addView(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转页面详情Activity
+                Intent intent = new Intent(mActivity, ContentDetailActivity.class);
+                intent.putExtra(Constances.ID_STORY,mEntity.getId()+"");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ((BaseActivity)mActivity).startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
+            }
+        });
         return view;
     }
 

@@ -327,7 +327,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 if (loadType == LOAD_TYPE_REFRESH) {//下拉刷新
                     //设置头部轮播图信息
                     mHeadAdapter = null;
-                    mHeadAdapter = new MainHeadAdapter(mode.getTop_stories());
+                    mHeadAdapter = new MainHeadAdapter(mode.getTop_stories(),MainFragment.this.getActivity());
                     mViewPager.setAdapter(mHeadAdapter);
                     initPointView(mode.getTop_stories().size());
 

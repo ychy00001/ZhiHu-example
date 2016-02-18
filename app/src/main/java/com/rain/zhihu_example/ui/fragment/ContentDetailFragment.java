@@ -24,6 +24,7 @@ import com.rain.zhihu_example.ui.activity.ContentDetailActivity;
 import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.ui.view.StoryView;
 import com.rain.zhihu_example.util.BuildConfigUtil;
+import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.widget.ScrollWebView;
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +50,8 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     private Toolbar mToolBar;
     private ContentDetailPresent mPresent;
     private int titleImgHeight;//头部imgView的高度
+    private ThemeUtil mThemeUtil;
+    private boolean isDark;
 
 
     public static ContentDetailFragment newInstance(Bundle bundle) {
@@ -60,6 +63,8 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mThemeUtil = new ThemeUtil(getActivity());
+        isDark = mThemeUtil.isThemeDark();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -71,11 +76,17 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         titleImgHeight = mTitleLayout.getMeasuredHeight();
         mToolBar = ((ContentDetailActivity)getActivity()).getToolbar();
 
+
         WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setBlockNetworkImage(true);
         mWebSettings.setDomStorageEnabled(true);
+        mWebSettings.setJavaScriptEnabled(true);
 
+
+        mWebView.setBackgroundResource(R.color.transparent);
+        mWebView.setBackgroundColor(0);
         mWebView.setWebViewClient(new WebClient());
+        mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setBackgroundResource(R.color.transparent);
         mWebView.setBackgroundColor(0);
         mWebView.setOnScrollListener(new MyScrollListener());
@@ -88,7 +99,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     @Override
     protected void requestData() {
-        mPresent = new ContentDetailPresent(this);
+        mPresent = new ContentDetailPresent(this,isDark);
         storyId = getArguments().getString(Constances.ID_STORY);
         //请求网络
         if(BuildConfigUtil.DEBUG){

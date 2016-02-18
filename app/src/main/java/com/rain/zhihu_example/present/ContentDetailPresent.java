@@ -16,9 +16,11 @@ import rx.schedulers.Schedulers;
 public class ContentDetailPresent {
     private StoryView mView;
     private StoryMode mMode;
+    private boolean isThemeDark;
 
-    public ContentDetailPresent(StoryView mView) {
+    public ContentDetailPresent(StoryView mView, boolean isThemeDark) {
         this.mView = mView;
+        this.isThemeDark = isThemeDark;
         mMode = new StoryMode();
     }
 
@@ -43,7 +45,7 @@ public class ContentDetailPresent {
         @Override
         public void onError(Throwable e) {
             //加载失败
-            System.out.println("onError");
+            System.out.println("onError"+e.toString());
             if(mView != null){
                 mView.setVebView(null);
             }
@@ -63,7 +65,16 @@ public class ContentDetailPresent {
                 for (String js : storyBean.getJs()){
                     cssHead.append(String.format(linkJs,js)+"\r\t");
                 }
-                mView.setVebView(cssHead.toString()+storyBean.getBody());
+                String start;
+                if(isThemeDark){
+                    start  = "<body class='night'>";
+                }else{
+                    start = "<body>";
+                }
+                String end = "</body>";
+                String body = cssHead.toString()+start+storyBean.getBody()+end;
+                //改变webView字体颜色
+                mView.setVebView(body);
                 mView.setTitleImg(storyBean.getImage(),storyBean.getTitle(),storyBean.getImage_source());
             }
         }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--主题背景属性-->
-    <attr name="ThemeBackgroundColor" format="color" />
-    <!--主题文字属性-->
-    <attr name="ThemeTextColor" format="color" />
-    <!-- 主题Toolbar属性-->
-    <attr name="toolBar_gb_color" format="color" />
 
-    <!--list条目背景点击-->
-    <attr name="selectorListItem" format="reference" />
-    <!--list文字颜色-->
-    <attr name="titleColor" format="color" />
+    <attr name="ThemeBackgroundColor" format="color" /> <!--主题背景属性-->
+    <attr name="ThemeTextColor" format="color" /><!--主题文字属性-->
+    <attr name="toolBar_gb_color" format="color" /> <!-- 主题Toolbar属性-->
+    <attr name="navigationView_bg" format="reference"/><!--首页侧滑导航栏-->
+    <attr name="navigation_title_text_color" format="color"/><!--首页侧滑导航头部文字颜色-->
+    <attr name="menu_color_mode" format="string" /><!--日间夜间模式变化文字-->
+    <!--***********item条目***********-->
+    <attr name="selectorListItem" format="reference" /><!--list条目背景点击-->
+    <attr name="titleColor" format="color" /><!--list文字颜色-->
+    <attr name="cardview_background_color" format="color" /><!-- cardView的背景色 -->
 
-    <!--通用文字颜色-->
+    <!--**************通用文字颜色********-->
     <attr name="text_color_gray" format="color" />
 
 </resources>

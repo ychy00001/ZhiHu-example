@@ -31,6 +31,10 @@ public class ScrollWebView extends WebView {
         }
     }
 
+    @Override
+    public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding, String historyUrl) {
+        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+    }
 
     /***********滚动监听**************/
     private OnScrollChangeListener mScrollListener;

@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
+import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.util.ToastUtil;
 
 
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("FieldCanBeLocal") private NavigationView mNavigationView;
     private MainFragment mFragment;
     private ImageView mLoginImg;
+    private ThemeUtil mThemeUtil;
 
     @Override
     protected int setContentLayout() {
@@ -37,6 +39,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mThemeUtil = new ThemeUtil(this);
         initView();
         initFragment();
     }
@@ -118,15 +121,13 @@ public class MainActivity extends BaseActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            ToastUtil.showToast("点击设置");
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                ToastUtil.showToast("点击设置");
+                break;
+            case R.id.action_theme_mode:
+                mThemeUtil.changeTheme();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -15,9 +15,8 @@
     <!--**************start! 自定义白天 夜间主题***********-->
     <!--application主题-->
     <style name="AppTheme.NoActionBar">
-        <item name="colorPrimary">#673AB7</item>
-        <item name="colorPrimaryDark">#512DA8</item>
-        <item name="colorAccent">#FF4081</item>
+        <!--控制菜单字体颜色-->
+        <item name="colorPrimary">@color/text_Color_light</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -28,50 +27,54 @@
         -->
         <!--整体页面主题-->
         <item name="ThemeBackgroundColor">@color/defaultBackground_light</item>
-        <item name="ThemeTextColor">@color/defaultTextColor_light</item>
+        <item name="ThemeTextColor">@color/text_Color_light</item>
+
+        <!--导航 Toolbar-->
         <item name="toolBar_gb_color">@color/toolbar_bg_color_light</item>
+        <item name="menu_color_mode">@string/action_dark_mode</item>
+        <item name="navigationView_bg">@drawable/side_nav_bar</item>
+        <item name="navigation_title_text_color">@color/navigation_title_text_color_light</item>
 
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_light</item>
 
         <!--条目-->
         <item name="selectorListItem">@drawable/item_bg_select_light</item>
-        <item name="titleColor">@color/defaultTextColor_light</item>
+        <item name="titleColor">@color/text_Color_light</item>
+        <item name="cardview_background_color">@color/cardView_bg_light</item>
     </style>
 
-    <!--白天-->
+    <!--白天 都是默认application的内容-->
     <style name="AppTheme.Light" parent="AppTheme.NoActionBar">
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@color/defaultBackground_light</item>
-        <!--整体页面主题-->
-        <item name="ThemeBackgroundColor">@color/defaultBackground_light</item>
-        <item name="ThemeTextColor">@color/defaultTextColor_light</item>
-        <item name="toolBar_gb_color">@color/toolbar_bg_color_light</item>
-
-
-        <!--通用-->
-        <item name="text_color_gray">@color/color_gray_light</item>
-
-        <!--条目-->
-        <item name="selectorListItem">@drawable/item_bg_select_light</item>
-        <item name="titleColor">@color/defaultTextColor_light</item>
-
     </style>
 
     <!--黑夜-->
     <style name="AppTheme.Dark" parent="AppTheme.NoActionBar">
+        <!--控制菜单字体颜色-->
+        <item name="colorPrimary">@color/color_gray_small</item>
+
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@color/defaultBackground_dark</item>
         <!--整体页面主题-->
         <item name="ThemeBackgroundColor">@color/defaultBackground_dark</item>
-        <item name="ThemeTextColor">@color/defaultTextColor_dark</item>
+        <item name="ThemeTextColor">@color/text_Color_dark</item>
+
+        <!--导航 Toolbar-->
         <item name="toolBar_gb_color">@color/toolbar_bg_color_dark</item>
+        <item name="menu_color_mode">@string/action_light_mode</item>
+        <item name="navigationView_bg">@color/color_black_small</item>
+        <item name="navigation_title_text_color">@color/navigation_title_text_color_dark</item>
+
+
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_dark</item>
 
         <!--条目-->
         <item name="selectorListItem">@drawable/item_bg_select_dark</item>
-        <item name="titleColor">@color/defaultTextColor_dark</item>
+        <item name="titleColor">@color/text_Color_dark</item>
+        <item name="cardview_background_color">@color/cardView_bg_dark</item>
     </style>
 
     <!--**************end! 自定义白天 夜间主题***********-->

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">小镇新闻</string>
-    <string name="action_settings">设置</string>
+    <string name="action_settings">设置选项</string>
+    <string name="action_dark_mode">夜间模式</string>
+    <string name="action_light_mode">日间模式</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="tip_network_error">网络连接失败</string>

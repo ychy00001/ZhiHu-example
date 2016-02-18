@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 首页列表适配器
  * Created by yangchunyu
  * 2016/1/26 11:22
  */
@@ -69,9 +70,17 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             view.setLayoutParams(layoutParams);
             return new GroupItemViewHolder(view);
         } else if (viewType == TYPE_NORMAL_ITEM) {//正常条目
-            return new NormalItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+            View view = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.item_home_base_list, null
-            ));
+            );
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(
+                    RecyclerView.LayoutParams.MATCH_PARENT,ViewUtil.dp2px(parent.getContext(),100)
+            );
+            layoutParams.topMargin = ViewUtil.dp2px(parent.getContext(),10);
+            layoutParams.leftMargin = ViewUtil.dp2px(parent.getContext(),10);
+            layoutParams.rightMargin = ViewUtil.dp2px(parent.getContext(),7);
+            view.setLayoutParams(layoutParams);
+            return new NormalItemViewHolder(view);
         }
         return null;
     }
