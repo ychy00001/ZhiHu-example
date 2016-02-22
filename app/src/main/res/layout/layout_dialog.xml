@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="?attr/ThemeBackgroundColor"
+                android:layout_width="200dp" android:layout_height="240dp">
+    <TextView
+        android:padding="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/text_color_gray"
+        android:textSize="20sp"
+        android:text="提示:"/>
+
+    <TextView
+        android:padding="20dp"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/text_color_gray"
+        android:textSize="20sp"
+        android:text="确定要退出吗?"/>
+
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="?attr/text_color_gray"
+            android:background="?attr/btn_bg"
+            android:layout_height="wrap_content"
+            android:text="确定"/>
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:textColor="?attr/text_color_gray"
+            android:background="?attr/btn_bg"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="取消"/>
+    </LinearLayout>
+
+</RelativeLayout>

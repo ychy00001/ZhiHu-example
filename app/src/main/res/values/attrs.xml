@@ -15,4 +15,6 @@
     <!--**************通用文字颜色********-->
     <attr name="text_color_gray" format="color" />
 
+    <attr name="btn_bg" format="reference" /><!--按钮颜色-->
+
 </resources>

@@ -3,6 +3,7 @@ package com.rain.zhihu_example.api;
 import com.rain.zhihu_example.mode.HomeMode;
 import com.rain.zhihu_example.mode.bean.StoryBean;
 import com.rain.zhihu_example.mode.bean.StroyExtraBean;
+import com.rain.zhihu_example.mode.bean.SubscribeBean;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -61,10 +62,18 @@ public class Apis {
     }
 
     /**
-     * 加载内容详情页额外
+     * 加载内容详情页额外(不知道何用 先不管)
      */
     public interface ContentDetailExtraService{
         @GET("/api/4/story-extra/{storyId}")
         Observable<StroyExtraBean> requestExtraStory(@Path("storyId")String stroyId);
+    }
+
+    /**
+     * 加载订阅标签数据
+     */
+    public interface  SubscribeService{
+        @GET("/api/4/theme/{subscribeId}")
+        Observable<SubscribeBean> requestSubscribe(@Path("subscribeId")String subscribeId);
     }
 }

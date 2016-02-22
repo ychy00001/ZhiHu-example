@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="?attr/ThemeBackgroundColor"
     >
 
     <RelativeLayout
@@ -30,7 +31,7 @@
             android:paddingRight="10dp"
             android:singleLine="true"
             android:text="@string/tip_network_error"
-            android:textColor="#ff717171"
+            android:textColor="?attr/text_color_gray"
             android:textSize="@dimen/text_size_13"
             />
     </RelativeLayout>

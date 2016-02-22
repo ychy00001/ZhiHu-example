@@ -1,23 +1,26 @@
 package com.rain.zhihu_example.ui.activity;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.*;
+import android.widget.Button;
 import android.widget.ImageView;
 import butterknife.OnClick;
 import com.rain.zhihu_example.R;
+import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
+import com.rain.zhihu_example.ui.fragment.SubscribeFragment;
 import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.util.ToastUtil;
+import com.rain.zhihu_example.util.ViewUtil;
 
 
 public class MainActivity extends BaseActivity
@@ -27,7 +30,7 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("FieldCanBeLocal") private Toolbar mToolbar;
     @SuppressWarnings("FieldCanBeLocal") private DrawerLayout mDrawer;
     @SuppressWarnings("FieldCanBeLocal") private NavigationView mNavigationView;
-    private MainFragment mFragment;
+    private Fragment mFragment;
     private ImageView mLoginImg;
     private ThemeUtil mThemeUtil;
 
@@ -78,31 +81,55 @@ public class MainActivity extends BaseActivity
      * 浮动按钮点击
      */
     @OnClick(R.id.fab)
-    void fabClick(){
+    void fabClick() {
         showExitDialog();
     }
 
-    private void showExitDialog() {AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("真的要退出啊？");
-        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+    private void showExitDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
+
+        //        /**
+        //         * 设置显示位置
+        //         */
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = (int) (display.getWidth() * 0.9); //设置宽度
+        lp.height = (int) (ViewUtil.dp2px(MainActivity.this, 200)); //设置宽度
+        lp.gravity = Gravity.CENTER;
+        dialog.getWindow().setAttributes(lp);
+
+        Button btnOK = (Button) view.findViewById(R.id.btn_ok);
+        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        dialog.setCanceledOnTouchOutside(true);
+        btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                MainActivity.this.finish();
+            public void onClick(View v) {
+                if (dialog != null) {
+                    MainActivity.this.finish();
+                }
             }
         });
-        builder.setNegativeButton("再看看", null);
-        builder.setCancelable(false);
-        builder.create().show();
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        dialog.show();
     }
 
 
     /*****************************整体界面设置************************************/
     /**
      * 设置ToolBar上面的文字
+     *
      * @param text 所要显示的文字
      */
-    public void setToolbarText(String text){
+    public void setToolbarText(String text) {
         mToolbar.setTitle(text);
     }
 
@@ -121,7 +148,7 @@ public class MainActivity extends BaseActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_settings:
                 ToastUtil.showToast("点击设置");
                 break;
@@ -145,25 +172,50 @@ public class MainActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-//        if (id == R.id.nav_camara) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
+        if (id == R.id.nav_head) {//首页
+            initFragment();
+        } else if (id == R.id.nav_recommend) {//每日推荐 api/4/theme/12
+            replaceFragment("12","用户推荐日报");
+        } else if (id == R.id.nav_psychology) {//心理学 api/4/theme/13
+            replaceFragment("13","日常心理学");
+        } else if (id == R.id.nav_unbored) {//不许无聊api/4/theme/11
+            replaceFragment("11","不许无聊");
+        } else if (id == R.id.nav_move) {//电影api/4/theme/3
+            replaceFragment("3","电影日报");
+        } else if (id == R.id.nav_design) {//设计api/4/theme/4
+            replaceFragment("4","设计日报");
+        } else if (id == R.id.nav_company) {//大公司api/4/theme/5
+            replaceFragment("5","大公司日报");
+        } else if (id == R.id.nav_financial) {//金融 api/4/theme/6
+            replaceFragment("6","财经日报");
+        } else if (id == R.id.nav_net_safe) {//互联网安全api/4/theme/10
+            replaceFragment("10","互联网安全日报");
+        } else if (id == R.id.nav_start_game) {//游戏api/4/theme/2
+            replaceFragment("2","开始游戏");
+        } else if (id == R.id.nav_music) {//音乐api/4/theme/7
+            replaceFragment("7","音乐日报");
+        } else if (id == R.id.nav_cartoon) {//卡通api/4/theme/9
+            replaceFragment("9","动漫日报");
+        } else if (id == R.id.nav_sport) {//体育api/4/theme/8
+            replaceFragment("8","体育日报");
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * 替换fragment 显示订阅标签
+     */
+    private void replaceFragment(String subscribeId,String subscribeName) {
+        Bundle extras = getIntent().getExtras();
+        extras.putString(Constances.ID_SUBSCRIBE,subscribeId);
+        extras.putString(Constances.NAME_SUBSCRIBE,subscribeName);
+        mFragment = SubscribeFragment.newInstance(extras);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mFragment, SubscribeFragment.TAG)
+                .commit();
     }
 
 

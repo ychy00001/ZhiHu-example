@@ -31,6 +31,6 @@
         android:scaleType="centerCrop"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@mipmap/flot_button" />
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
 </android.support.design.widget.CoordinatorLayout>
