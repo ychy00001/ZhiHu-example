@@ -31,7 +31,7 @@ public class SubscribePresent {
                 .subscribe(new SubscribeSubscrib());
     }
 
-    private class SubscribeSubscrib extends Subscriber{
+    private class SubscribeSubscrib extends Subscriber<SubscribeBean>{
 
         @Override
         public void onCompleted() {
@@ -45,7 +45,7 @@ public class SubscribePresent {
         }
 
         @Override
-        public void onNext(Object o) {
+        public void onNext(SubscribeBean o) {
             System.out.println("执行数据");
             mSubscribeView.setListData((SubscribeBean) o);
         }

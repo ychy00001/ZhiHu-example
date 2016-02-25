@@ -3,48 +3,23 @@
               android:orientation="horizontal"
               android:gravity="center_vertical"
               android:padding="10dp"
+              android:background="?attr/ThemeBackgroundColor"
               android:layout_width="match_parent"
-              android:layout_height="60dp">
+              android:layout_height="40dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="23sp"
+        android:textSize="14sp"
         android:textColor="?attr/text_color_gray"
         android:text="主编:" />
 
-    <ImageView
-        android:id="@+id/img_editor1"
+    <LinearLayout
+        android:id="@+id/ll_img_container"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:padding="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-
-    <ImageView
-        android:id="@+id/img_editor2"
-        android:layout_marginLeft="10dp"
-        android:padding="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-
-    <ImageView
-        android:id="@+id/img_editor3"
-        android:layout_marginLeft="10dp"
-        android:padding="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-
-    <ImageView
-        android:id="@+id/img_editor4"
-        android:layout_marginLeft="10dp"
-        android:padding="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
-
-    <ImageView
-        android:id="@+id/img_editor5"
-        android:layout_marginLeft="10dp"
-        android:padding="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </LinearLayout>
 </LinearLayout>

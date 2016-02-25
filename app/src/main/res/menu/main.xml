@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_theme_mode"
-        android:title="?attr/menu_color_mode"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_notify"
-        android:title="@string/action_notify"
-        android:titleCondensed="@string/action_notify"
-        android:icon="@mipmap/ic_action_notify"
-        android:orderInCategory="100"
-        app:showAsAction="always" />
+    <group android:id="@+id/group_main">
+        <item
+            android:id="@+id/action_theme_mode"
+            android:title="?attr/menu_color_mode"
+            android:orderInCategory="100"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_settings"
+            android:title="@string/action_settings"
+            android:orderInCategory="100"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_notify"
+            android:title="@string/action_notify"
+            android:titleCondensed="@string/action_notify"
+            android:icon="@mipmap/ic_action_notify"
+            android:orderInCategory="100"
+            app:showAsAction="always" />
+    </group>
+
+    <group android:id="@+id/group_subscribe"
+           android:visible="false">
+        <item
+            android:id="@+id/action_subscribe"
+            android:title="@string/action_notify"
+            android:titleCondensed="@string/action_notify"
+            android:icon="@android:drawable/ic_menu_add"
+            android:orderInCategory="100"
+            app:showAsAction="always" />
+    </group>
 </menu>

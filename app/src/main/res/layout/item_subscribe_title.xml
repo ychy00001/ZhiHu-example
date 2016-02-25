@@ -5,17 +5,22 @@
         
     <ImageView
         android:id="@+id/img_title"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <TextView
         android:id="@+id/tv_title"
         android:text="标题"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="25dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/shape_home_head_bg"
         android:layout_alignParentBottom="true"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 
 </RelativeLayout>

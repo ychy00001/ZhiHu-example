@@ -34,6 +34,9 @@ public class MainActivity extends BaseActivity
     private ImageView mLoginImg;
     private ThemeUtil mThemeUtil;
 
+    private boolean isHeadMenu;//是否显示主菜单
+    private boolean isAttention;//是否关注（在订阅标签下）
+
     @Override
     protected int setContentLayout() {
         return R.layout.activity_main;
@@ -51,6 +54,7 @@ public class MainActivity extends BaseActivity
      * 启动主页面Fragment
      */
     private void initFragment() {
+        isHeadMenu = true;
         mFragment = MainFragment.newInstance(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, MainFragment.TAG)
@@ -155,7 +159,12 @@ public class MainActivity extends BaseActivity
             case R.id.action_theme_mode:
                 mThemeUtil.changeTheme();
                 break;
+            case R.id.action_subscribe:
+                isAttention = !isAttention;
+                break;
         }
+        //重新请求菜单
+        invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
 
@@ -176,6 +185,7 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_head) {//首页
             initFragment();
         } else if (id == R.id.nav_recommend) {//每日推荐 api/4/theme/12
+            System.out.println("点击选择");
             replaceFragment("12","用户推荐日报");
         } else if (id == R.id.nav_psychology) {//心理学 api/4/theme/13
             replaceFragment("13","日常心理学");
@@ -202,6 +212,8 @@ public class MainActivity extends BaseActivity
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        //重新请求菜单
+        invalidateOptionsMenu();
         return true;
     }
 
@@ -209,7 +221,12 @@ public class MainActivity extends BaseActivity
      * 替换fragment 显示订阅标签
      */
     private void replaceFragment(String subscribeId,String subscribeName) {
+        isHeadMenu = false;
+        isAttention = false;
         Bundle extras = getIntent().getExtras();
+        if(null == extras){
+            extras = new Bundle();
+        }
         extras.putString(Constances.ID_SUBSCRIBE,subscribeId);
         extras.putString(Constances.NAME_SUBSCRIBE,subscribeName);
         mFragment = SubscribeFragment.newInstance(extras);
@@ -218,6 +235,23 @@ public class MainActivity extends BaseActivity
                 .commit();
     }
 
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(isHeadMenu){
+            menu.setGroupVisible(R.id.group_main,true);
+            menu.setGroupVisible(R.id.group_subscribe,false);
+        }else{
+            menu.setGroupVisible(R.id.group_main,false);
+            menu.setGroupVisible(R.id.group_subscribe,true);
+        }
+        if(isAttention){
+            menu.getItem(3).setIcon(R.mipmap.ic_menu_block);
+        }else{
+            menu.getItem(3).setIcon(android.R.drawable.ic_menu_add);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     protected void onDestroy() {
