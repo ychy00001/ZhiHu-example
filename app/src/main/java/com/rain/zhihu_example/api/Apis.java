@@ -76,4 +76,13 @@ public class Apis {
         @GET("/api/4/theme/{subscribeId}")
         Observable<SubscribeBean> requestSubscribe(@Path("subscribeId")String subscribeId);
     }
+
+    /**
+     * /api/4/theme/11/before/7258022
+     * 加载更多订阅标签数据
+     */
+    public interface  SubscribeMoreService{
+        @GET("/api/4/theme/{subscribeId}/before/{lastSubscribeId}")
+        Observable<SubscribeBean> requestSubscribe(@Path("subscribeId")String subscribeId,@Path("lastSubscribeId")String lastId);
+    }
 }

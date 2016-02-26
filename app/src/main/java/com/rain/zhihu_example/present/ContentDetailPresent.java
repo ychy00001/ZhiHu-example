@@ -1,5 +1,6 @@
 package com.rain.zhihu_example.present;
 
+import android.text.TextUtils;
 import com.rain.zhihu_example.mode.StoryMode;
 import com.rain.zhihu_example.mode.bean.StoryBean;
 import com.rain.zhihu_example.ui.view.StoryView;
@@ -75,7 +76,12 @@ public class ContentDetailPresent {
                 String body = cssHead.toString()+start+storyBean.getBody()+end;
                 //改变webView字体颜色
                 mView.setVebView(body);
-                mView.setTitleImg(storyBean.getImage(),storyBean.getTitle(),storyBean.getImage_source());
+                if(TextUtils.isEmpty(storyBean.getImage())){
+                    mView.setTitleImg(null,null,null);
+                }else{
+                    mView.setTitleImg(storyBean.getImage(),storyBean.getTitle(),storyBean.getImage_source());
+                }
+
             }
         }
     }

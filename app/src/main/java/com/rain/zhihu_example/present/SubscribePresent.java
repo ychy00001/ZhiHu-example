@@ -15,8 +15,13 @@ import rx.schedulers.Schedulers;
  *         14:48
  */
 public class SubscribePresent {
+    public static final int LOAD_DATA = 0;
+    public static final int LOAD_MORE = 1;
+
     private SubscribeMode mSubscribeMode;
     private SubscribeView mSubscribeView;
+    private SubscribeBean mData;
+    private SubscribeSubscrib mSubsCallBack;
 
     public SubscribePresent(SubscribeView mSubscribeView) {
         this.mSubscribeView = mSubscribeView;
@@ -28,11 +33,37 @@ public class SubscribePresent {
         Observable<SubscribeBean> subscribeMode = mSubscribeMode.getSubscribeMode(subscribeId, isCache);
         subscribeMode.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new SubscribeSubscrib());
+                .subscribe(new SubscribeSubscrib(LOAD_DATA));
+    }
+
+    /**
+     * 加载更多
+     * 获取最后一项ID，根据最后一项id 请求
+     */
+    public void loadMore(String subscribeId) {
+        if(mData!=null){
+            String lastId = String.valueOf(mData.getStories().get(mData.getStories().size() - 1).getId());//获取最后一项ID
+            Observable<SubscribeBean> moreSubsc = mSubscribeMode.getMoreSubscribe(subscribeId, lastId);
+            moreSubsc.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribe(new SubscribeSubscrib(LOAD_MORE));
+        }
     }
 
     private class SubscribeSubscrib extends Subscriber<SubscribeBean>{
 
+        int loadType;
+
+        public SubscribeSubscrib(int loadType) {
+            this.loadType = loadType;
+        }
+
+        /**
+         * 设置加载类型
+         */
+        public void setLoadType(int loadType){
+            this.loadType = loadType;
+        }
         @Override
         public void onCompleted() {
             System.out.println("请求完成");
@@ -46,8 +77,18 @@ public class SubscribePresent {
 
         @Override
         public void onNext(SubscribeBean o) {
-            System.out.println("执行数据");
-            mSubscribeView.setListData((SubscribeBean) o);
+            System.out.println("onNext");
+            if(null != o){
+                if(loadType == LOAD_DATA){
+                    System.out.println("下拉刷新完成");
+                    mData = o;
+                    mSubscribeView.setListData(o);
+                }else{
+                    System.out.println("加载更多了");
+                    mData.getStories().addAll(o.getStories());
+                    mSubscribeView.notifyLoadMoreData(o);
+                }
+            }
         }
     }
 }

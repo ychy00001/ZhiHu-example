@@ -42,6 +42,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         //设置左上角的返回按钮
         mToolbar.setNavigationIcon(R.mipmap.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(this);
+        mToolbar.setTitle("");
     }
 
     /**

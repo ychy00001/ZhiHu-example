@@ -13,6 +13,7 @@ public class Constances {
 
     //StoryId 用于Intent传送数据
     public static final String ID_STORY = "storyId";
+    public static final String IS_STORY_IMG = "isShowStoryImg";//是否显示story头IMG
 
     //订阅ID以及名称
     public static final String ID_SUBSCRIBE = "subscribeId";

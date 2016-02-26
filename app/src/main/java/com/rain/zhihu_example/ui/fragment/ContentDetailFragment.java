@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import android.webkit.*;
@@ -117,6 +118,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
 
     @Override
     public void setTitleImg(String imgUrl, String imgTitle, String author) {
+        if(TextUtils.isEmpty(imgUrl)){
+            mTitleLayout.setVisibility(View.GONE);
+            return;
+        }
         Picasso.with(mContext).load(imgUrl).into(mTitleImg);
         mTitleText.setText(imgTitle);
         mAuthorText.setText(author);

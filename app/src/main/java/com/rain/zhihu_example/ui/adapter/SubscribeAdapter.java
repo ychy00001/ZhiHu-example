@@ -35,6 +35,22 @@ public class SubscribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mStories = data.getStories();
     }
 
+    /**
+     * 加载更多数据
+     */
+    public void loadMoreData(SubscribeBean moreData){
+        this.mStories.addAll(moreData.getStories());
+    }
+
+    /**
+     * 更新数据
+     */
+    public void update(SubscribeBean data){
+        this.mSubscribe = data;
+        this.mEditors = data.getEditors();
+        this.mStories = data.getStories();
+    }
+
     @Override
     public int getItemViewType(int position) {
         //第一条头标题
@@ -80,7 +96,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         int itemType = getItemViewType(position);
 
         if (itemType == TYPE_NORMAL_ITEM && holder instanceof NormalItemViewHolder) {
@@ -96,14 +112,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         .load(storiesEntity.getImages().get(0))
                         .into(normalItemViewHolder.imageView);
             }
-            normalItemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(normalItemViewHolder.itemView, index);
-                    }
-                }
-            });
+
         } else if (itemType == TYPE_TITLE_ITEM && holder instanceof TitleItemViewHolder) {
             //头部holder
             final TitleItemViewHolder titleHolder = (TitleItemViewHolder) holder;
@@ -114,6 +123,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (itemType == TYPE_EDITOR_ITEM && holder instanceof EditorViewHolder) {
             //编辑Holder
             final EditorViewHolder editorHolder = (EditorViewHolder) holder;
+            editorHolder.mImgLayout.removeAllViews();
             for (int i = 0; i < mEditors.size(); i++) {
                 ImageView imgView = new ImageView(editorHolder.mImgLayout.getContext());
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -125,6 +135,15 @@ public class SubscribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 editorHolder.mImgLayout.addView(imgView);
             }
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(holder.itemView, position);
+                }
+            }
+        });
     }
 
     @Override

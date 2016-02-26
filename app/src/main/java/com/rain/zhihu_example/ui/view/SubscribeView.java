@@ -10,4 +10,5 @@ import com.rain.zhihu_example.mode.bean.SubscribeBean;
 public interface SubscribeView {
     void setListData(SubscribeBean bean);
     void loadDataComplete();
+    void notifyLoadMoreData(SubscribeBean moreData);
 }

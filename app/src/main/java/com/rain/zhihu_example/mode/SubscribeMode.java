@@ -20,4 +20,12 @@ public class SubscribeMode {
         Apis.SubscribeService subscribeService = ApiFactory.createServiceFrom(Apis.SubscribeService.class, Apis.ZH_HOST, isCache);
         return subscribeService.requestSubscribe(subscribeId);
     }
+
+    /**
+     * 获取SubscribeMore 对象
+     */
+    public Observable<SubscribeBean> getMoreSubscribe(String subscribeId,String lastSubscribeId){
+        Apis.SubscribeMoreService moreService = ApiFactory.createServiceFrom(Apis.SubscribeMoreService.class, Apis.ZH_HOST,false);
+        return moreService.requestSubscribe(subscribeId, lastSubscribeId);
+    }
 }

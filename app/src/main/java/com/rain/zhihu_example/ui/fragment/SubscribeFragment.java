@@ -1,5 +1,6 @@
 package com.rain.zhihu_example.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,8 +12,10 @@ import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.mode.bean.SubscribeBean;
 import com.rain.zhihu_example.present.SubscribePresent;
+import com.rain.zhihu_example.ui.activity.ContentDetailActivity;
 import com.rain.zhihu_example.ui.activity.MainActivity;
 import com.rain.zhihu_example.ui.adapter.SubscribeAdapter;
+import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.ui.view.SubscribeView;
 import com.rain.zhihu_example.widget.LoadMoreRecyclerView;
@@ -26,9 +29,6 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
 
     public static final String TAG = "SubscribeFragment";
 
-    public static final int LOAD_TYPE_REFRESH = 0;//加载类型 下拉刷新
-    public static final int LOAD_TYPE_LOADMORE = 1;//加载类型 上拉加载更多
-
     private String subscribeName;
     private String subscribeId;
     private SubscribePresent mPresent;
@@ -36,6 +36,7 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
 
     private LoadMoreRecyclerView mRecyclerView;
     private SwipeRefreshLayout mRefreshLayout;
+    private MyItemClick mClickCallBack;//Adapter条目点击事件
 
     public static SubscribeFragment newInstance(Bundle args) {
         SubscribeFragment fragment = new SubscribeFragment();
@@ -65,7 +66,6 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
                 android.R.color.holo_orange_light);
         mRecyclerView.setAutoLoadMoreEnable(true);
         mRecyclerView.setLoadMoreListener(this);
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         //下拉刷新
         mRefreshLayout.setOnRefreshListener(this);
@@ -84,6 +84,7 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
      */
     @Override
     public void onRefresh() {
+        System.out.println("下拉刷新");
         mPresent.requestData(subscribeId,false);
     }
 
@@ -92,6 +93,7 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
      */
     @Override
     public void onLoadMore() {
+        mPresent.loadMore(subscribeId);
     }
 
 
@@ -99,7 +101,7 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
      * 执行数据请求
      */
     @Override
-    protected void requestData() {
+    protected void requestData()  {
         mPresent.requestData(subscribeId,true);
     }
 
@@ -126,8 +128,11 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
     public void setListData(SubscribeBean bean) {
         if(mAdapter == null){
             mAdapter = new SubscribeAdapter(bean);
+            mClickCallBack = new MyItemClick(bean);
+            mAdapter.setOnItemClickListener(mClickCallBack);
             mRecyclerView.setAdapter(mAdapter);
         }else{
+            mAdapter.update(bean);
             mRecyclerView.notifyLoadMoreFinish(true);
         }
 
@@ -138,6 +143,41 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
     public void loadDataComplete() {
         if(mRefreshLayout.isRefreshing()){
             mRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    /**
+     * 加载更多
+     */
+    @Override
+    public void notifyLoadMoreData(SubscribeBean moreData) {
+        if(moreData.getStories().size() == 0){
+            mRecyclerView.notifyLoadMoreFinish(false);
+            return;
+        }
+        mAdapter.loadMoreData(moreData);
+        mRecyclerView.notifyLoadMoreFinish(true);
+    }
+
+    /**
+     * 点击事件
+     */
+    private class MyItemClick implements SubscribeAdapter.OnItemClickListener{
+        SubscribeBean mData;
+
+        public MyItemClick(SubscribeBean mData) {
+            this.mData = mData;
+        }
+
+        @Override
+        public void onItemClick(View view, int position) {
+            int storePosition = position-2;
+            //跳转页面详情Activity
+            Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
+            intent.putExtra(Constances.ID_STORY,mData.getStories().get(storePosition).getId()+"");
+            intent.putExtra(Constances.IS_STORY_IMG,false);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
         }
     }
 }
