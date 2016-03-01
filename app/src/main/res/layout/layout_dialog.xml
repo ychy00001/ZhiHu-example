@@ -26,14 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
-            android:id="@+id/btn_ok"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textColor="?attr/text_color_gray"
-            android:background="?attr/btn_bg"
-            android:layout_height="wrap_content"
-            android:text="确定"/>
-        <Button
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:textColor="?attr/text_color_gray"
@@ -41,6 +33,14 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="取消"/>
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="?attr/text_color_gray"
+            android:background="?attr/btn_bg"
+            android:layout_height="wrap_content"
+            android:text="确定"/>
     </LinearLayout>
 
 </RelativeLayout>

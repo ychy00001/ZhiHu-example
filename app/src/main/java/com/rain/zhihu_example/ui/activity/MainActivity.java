@@ -31,6 +31,8 @@ import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.util.ToastUtil;
 import com.rain.zhihu_example.util.ViewUtil;
 
+import java.lang.ref.WeakReference;
+
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +49,7 @@ public class MainActivity extends BaseActivity
     private boolean isAttention;//是否关注（在订阅标签下）
     private ImageView windowImg;
     private WindowManager wm;
+    private WeakReference<Bitmap> bmp;
 
     @Override
     protected int setContentLayout() {
@@ -174,7 +177,7 @@ public class MainActivity extends BaseActivity
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        SystemClock.sleep(500);
+                        SystemClock.sleep(400);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -198,14 +201,20 @@ public class MainActivity extends BaseActivity
     /**
      * 渐渐变淡
      */
-    private void shadeWindowImg(){
+    private void shadeWindowImg() {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(windowImg, "alpha", 1.0f, 0.0f)
-                .setDuration(500);
+                .setDuration(300);
         alpha.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                wm.removeView(windowImg);
+               wm.removeViewImmediate(windowImg);
+               windowImg.destroyDrawingCache();
+               bmp.clear();
+               windowImg = null;
+               wm = null;
+               bmp = null;
+               System.gc();
             }
         });
         alpha.start();
@@ -216,7 +225,7 @@ public class MainActivity extends BaseActivity
      */
     private void showFullImg() {
         windowImg = new ImageView(this);
-        windowImg.setImageBitmap(myShot(this));
+        windowImg.setImageBitmap(myShot(this).get());
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
@@ -226,14 +235,14 @@ public class MainActivity extends BaseActivity
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         params.type = WindowManager.LayoutParams.TYPE_TOAST;
         params.format = PixelFormat.RGBA_8888;
-        params.gravity = Gravity.LEFT+Gravity.TOP;
-        wm.addView(windowImg,params);
+        params.gravity = Gravity.LEFT + Gravity.TOP;
+        wm.addView(windowImg, params);
     }
 
     /**
      * 截取屏幕
      */
-    public Bitmap myShot(Activity activity) {
+    public WeakReference<Bitmap> myShot(Activity activity) {
         // 获取windows中最顶层的view
         View view = activity.getWindow().getDecorView();
         view.buildDrawingCache();
@@ -252,8 +261,8 @@ public class MainActivity extends BaseActivity
         view.setDrawingCacheEnabled(true);
 
         // 去掉状态栏
-        Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache(), 0,
-                statusBarHeights, widths, heights - statusBarHeights);
+        bmp = new WeakReference<>(Bitmap.createBitmap(view.getDrawingCache(), 0,
+                statusBarHeights, widths, heights - statusBarHeights));
 
         // 销毁缓存信息
         view.destroyDrawingCache();
@@ -277,30 +286,29 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_head) {//首页
             initFragment();
         } else if (id == R.id.nav_recommend) {//每日推荐 api/4/theme/12
-            System.out.println("点击选择");
-            replaceFragment("12","用户推荐日报");
+            replaceFragment("12", "用户推荐日报");
         } else if (id == R.id.nav_psychology) {//心理学 api/4/theme/13
-            replaceFragment("13","日常心理学");
+            replaceFragment("13", "日常心理学");
         } else if (id == R.id.nav_unbored) {//不许无聊api/4/theme/11
-            replaceFragment("11","不许无聊");
+            replaceFragment("11", "不许无聊");
         } else if (id == R.id.nav_move) {//电影api/4/theme/3
-            replaceFragment("3","电影日报");
+            replaceFragment("3", "电影日报");
         } else if (id == R.id.nav_design) {//设计api/4/theme/4
-            replaceFragment("4","设计日报");
+            replaceFragment("4", "设计日报");
         } else if (id == R.id.nav_company) {//大公司api/4/theme/5
-            replaceFragment("5","大公司日报");
+            replaceFragment("5", "大公司日报");
         } else if (id == R.id.nav_financial) {//金融 api/4/theme/6
-            replaceFragment("6","财经日报");
+            replaceFragment("6", "财经日报");
         } else if (id == R.id.nav_net_safe) {//互联网安全api/4/theme/10
-            replaceFragment("10","互联网安全日报");
+            replaceFragment("10", "互联网安全日报");
         } else if (id == R.id.nav_start_game) {//游戏api/4/theme/2
-            replaceFragment("2","开始游戏");
+            replaceFragment("2", "开始游戏");
         } else if (id == R.id.nav_music) {//音乐api/4/theme/7
-            replaceFragment("7","音乐日报");
+            replaceFragment("7", "音乐日报");
         } else if (id == R.id.nav_cartoon) {//卡通api/4/theme/9
-            replaceFragment("9","动漫日报");
+            replaceFragment("9", "动漫日报");
         } else if (id == R.id.nav_sport) {//体育api/4/theme/8
-            replaceFragment("8","体育日报");
+            replaceFragment("8", "体育日报");
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -312,15 +320,15 @@ public class MainActivity extends BaseActivity
     /**
      * 替换fragment 显示订阅标签
      */
-    private void replaceFragment(String subscribeId,String subscribeName) {
+    private void replaceFragment(String subscribeId, String subscribeName) {
         isHeadMenu = false;
         isAttention = false;
         Bundle extras = getIntent().getExtras();
-        if(null == extras){
+        if (null == extras) {
             extras = new Bundle();
         }
-        extras.putString(Constances.ID_SUBSCRIBE,subscribeId);
-        extras.putString(Constances.NAME_SUBSCRIBE,subscribeName);
+        extras.putString(Constances.ID_SUBSCRIBE, subscribeId);
+        extras.putString(Constances.NAME_SUBSCRIBE, subscribeName);
         mFragment = SubscribeFragment.newInstance(extras);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, SubscribeFragment.TAG)
@@ -330,16 +338,16 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(isHeadMenu){
-            menu.setGroupVisible(R.id.group_main,true);
-            menu.setGroupVisible(R.id.group_subscribe,false);
-        }else{
-            menu.setGroupVisible(R.id.group_main,false);
-            menu.setGroupVisible(R.id.group_subscribe,true);
+        if (isHeadMenu) {
+            menu.setGroupVisible(R.id.group_main, true);
+            menu.setGroupVisible(R.id.group_subscribe, false);
+        } else {
+            menu.setGroupVisible(R.id.group_main, false);
+            menu.setGroupVisible(R.id.group_subscribe, true);
         }
-        if(isAttention){
+        if (isAttention) {
             menu.getItem(3).setIcon(R.mipmap.ic_menu_block);
-        }else{
+        } else {
             menu.getItem(3).setIcon(android.R.drawable.ic_menu_add);
         }
         return super.onPrepareOptionsMenu(menu);
