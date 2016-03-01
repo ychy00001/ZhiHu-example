@@ -1,6 +1,12 @@
 package com.rain.zhihu_example.ui.activity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +19,9 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import butterknife.OnClick;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.ui.base.BaseActivity;
@@ -36,6 +45,8 @@ public class MainActivity extends BaseActivity
 
     private boolean isHeadMenu;//是否显示主菜单
     private boolean isAttention;//是否关注（在订阅标签下）
+    private ImageView windowImg;
+    private WindowManager wm;
 
     @Override
     protected int setContentLayout() {
@@ -157,7 +168,23 @@ public class MainActivity extends BaseActivity
                 ToastUtil.showToast("点击设置");
                 break;
             case R.id.action_theme_mode:
-                mThemeUtil.changeTheme();
+                //截取屏幕显示
+                showFullImg();
+                //停0.5秒
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SystemClock.sleep(500);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mThemeUtil.changeTheme();
+                                //图片变淡
+                                shadeWindowImg();
+                            }
+                        });
+                    }
+                }).start();
                 break;
             case R.id.action_subscribe:
                 isAttention = !isAttention;
@@ -166,6 +193,71 @@ public class MainActivity extends BaseActivity
         //重新请求菜单
         invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 渐渐变淡
+     */
+    private void shadeWindowImg(){
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(windowImg, "alpha", 1.0f, 0.0f)
+                .setDuration(500);
+        alpha.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                wm.removeView(windowImg);
+            }
+        });
+        alpha.start();
+    }
+
+    /**
+     * 展示全屏图片
+     */
+    private void showFullImg() {
+        windowImg = new ImageView(this);
+        windowImg.setImageBitmap(myShot(this));
+        wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE//不能点击
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+        params.type = WindowManager.LayoutParams.TYPE_TOAST;
+        params.format = PixelFormat.RGBA_8888;
+        params.gravity = Gravity.LEFT+Gravity.TOP;
+        wm.addView(windowImg,params);
+    }
+
+    /**
+     * 截取屏幕
+     */
+    public Bitmap myShot(Activity activity) {
+        // 获取windows中最顶层的view
+        View view = activity.getWindow().getDecorView();
+        view.buildDrawingCache();
+
+        // 获取状态栏高度
+        Rect rect = new Rect();
+        view.getWindowVisibleDisplayFrame(rect);
+        int statusBarHeights = rect.top;
+        Display display = activity.getWindowManager().getDefaultDisplay();
+
+        // 获取屏幕宽和高
+        int widths = display.getWidth();
+        int heights = display.getHeight();
+
+        // 允许当前窗口保存缓存信息
+        view.setDrawingCacheEnabled(true);
+
+        // 去掉状态栏
+        Bitmap bmp = Bitmap.createBitmap(view.getDrawingCache(), 0,
+                statusBarHeights, widths, heights - statusBarHeights);
+
+        // 销毁缓存信息
+        view.destroyDrawingCache();
+        return bmp;
     }
 
     @Override
