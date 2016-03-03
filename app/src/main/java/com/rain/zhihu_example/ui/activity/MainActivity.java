@@ -2,6 +2,7 @@ package com.rain.zhihu_example.ui.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import butterknife.OnClick;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -25,6 +27,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.ui.base.BaseActivity;
+import com.rain.zhihu_example.ui.fragment.CollectionFragment;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
 import com.rain.zhihu_example.ui.fragment.SubscribeFragment;
 import com.rain.zhihu_example.util.ThemeUtil;
@@ -35,21 +38,26 @@ import java.lang.ref.WeakReference;
 
 
 public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private FloatingActionButton mFab;//浮动按钮
-    @SuppressWarnings("FieldCanBeLocal") private Toolbar mToolbar;
-    @SuppressWarnings("FieldCanBeLocal") private DrawerLayout mDrawer;
-    @SuppressWarnings("FieldCanBeLocal") private NavigationView mNavigationView;
+    private Toolbar mToolbar;
+    private DrawerLayout mDrawer;
+    private NavigationView mNavigationView;
+    private LinearLayout mLayoutCollection;//收藏布局
+    private LinearLayout mLayoutNothing;//没用布局
+    private LinearLayout mLayoutLogin;//登录布局
     private Fragment mFragment;
     private ImageView mLoginImg;
     private ThemeUtil mThemeUtil;
 
-    private boolean isHeadMenu;//是否显示主菜单
+    private boolean isSubscribeMenu;//是否显示订阅的菜单
+    private boolean isCollectionMenu;//是否显示收藏的菜单
     private boolean isAttention;//是否关注（在订阅标签下）
     private ImageView windowImg;
     private WindowManager wm;
     private WeakReference<Bitmap> bmp;
+    private DrawerLayout drawer;
 
     @Override
     protected int setContentLayout() {
@@ -61,6 +69,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         mThemeUtil = new ThemeUtil(this);
         initView();
+        initListener();
         initFragment();
     }
 
@@ -68,7 +77,8 @@ public class MainActivity extends BaseActivity
      * 启动主页面Fragment
      */
     private void initFragment() {
-        isHeadMenu = true;
+        isSubscribeMenu = false;
+        isCollectionMenu = false;
         mFragment = MainFragment.newInstance(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, MainFragment.TAG)
@@ -84,17 +94,27 @@ public class MainActivity extends BaseActivity
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mLoginImg = (ImageView) findViewById(R.id.imageView);
+        mLayoutCollection = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_collection);
+        mLayoutNothing = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_nothing);
+        mLayoutLogin = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_login);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         setSupportActionBar(mToolbar);
+        //设置选中首页
+        mNavigationView.setCheckedItem(R.id.nav_head);
+    }
+
+    private void initListener(){
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawer.setDrawerListener(toggle);
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
-        //设置选中首页
-        mNavigationView.setCheckedItem(R.id.nav_head);
-    }
 
+        mLayoutCollection.setOnClickListener(this);
+        mLayoutNothing.setOnClickListener(this);
+        mLayoutLogin.setOnClickListener(this);
+    }
     /**
      * 浮动按钮点击
      */
@@ -286,42 +306,64 @@ public class MainActivity extends BaseActivity
         if (id == R.id.nav_head) {//首页
             initFragment();
         } else if (id == R.id.nav_recommend) {//每日推荐 api/4/theme/12
-            replaceFragment("12", "用户推荐日报");
+            replaceSubscribeFragment("12", "用户推荐日报");
         } else if (id == R.id.nav_psychology) {//心理学 api/4/theme/13
-            replaceFragment("13", "日常心理学");
+            replaceSubscribeFragment("13", "日常心理学");
         } else if (id == R.id.nav_unbored) {//不许无聊api/4/theme/11
-            replaceFragment("11", "不许无聊");
+            replaceSubscribeFragment("11", "不许无聊");
         } else if (id == R.id.nav_move) {//电影api/4/theme/3
-            replaceFragment("3", "电影日报");
+            replaceSubscribeFragment("3", "电影日报");
         } else if (id == R.id.nav_design) {//设计api/4/theme/4
-            replaceFragment("4", "设计日报");
+            replaceSubscribeFragment("4", "设计日报");
         } else if (id == R.id.nav_company) {//大公司api/4/theme/5
-            replaceFragment("5", "大公司日报");
+            replaceSubscribeFragment("5", "大公司日报");
         } else if (id == R.id.nav_financial) {//金融 api/4/theme/6
-            replaceFragment("6", "财经日报");
+            replaceSubscribeFragment("6", "财经日报");
         } else if (id == R.id.nav_net_safe) {//互联网安全api/4/theme/10
-            replaceFragment("10", "互联网安全日报");
+            replaceSubscribeFragment("10", "互联网安全日报");
         } else if (id == R.id.nav_start_game) {//游戏api/4/theme/2
-            replaceFragment("2", "开始游戏");
+            replaceSubscribeFragment("2", "开始游戏");
         } else if (id == R.id.nav_music) {//音乐api/4/theme/7
-            replaceFragment("7", "音乐日报");
+            replaceSubscribeFragment("7", "音乐日报");
         } else if (id == R.id.nav_cartoon) {//卡通api/4/theme/9
-            replaceFragment("9", "动漫日报");
+            replaceSubscribeFragment("9", "动漫日报");
         } else if (id == R.id.nav_sport) {//体育api/4/theme/8
-            replaceFragment("8", "体育日报");
+            replaceSubscribeFragment("8", "体育日报");
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        //重新请求菜单
-        invalidateOptionsMenu();
+
+        closeDrawLayout();
         return true;
     }
 
     /**
+     * 关闭侧滑菜单
+     */
+    private void closeDrawLayout(){
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }
+    }
+    /**
+     * 跳转收藏Fragment
+     */
+    private void replaceCollectionFragment(){
+        isSubscribeMenu = false;
+        isCollectionMenu = true;
+
+        mFragment = CollectionFragment.newInstance(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mFragment, CollectionFragment.TAG)
+                .commit();
+        //重新请求菜单
+        invalidateOptionsMenu();
+    }
+    /**
      * 替换fragment 显示订阅标签
      */
-    private void replaceFragment(String subscribeId, String subscribeName) {
-        isHeadMenu = false;
+    private void replaceSubscribeFragment(String subscribeId, String subscribeName) {
+        isSubscribeMenu = true;
+        isCollectionMenu = false;
+
         isAttention = false;
         Bundle extras = getIntent().getExtras();
         if (null == extras) {
@@ -333,17 +375,22 @@ public class MainActivity extends BaseActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, SubscribeFragment.TAG)
                 .commit();
+        //重新请求菜单
+        invalidateOptionsMenu();
     }
 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (isHeadMenu) {
-            menu.setGroupVisible(R.id.group_main, true);
-            menu.setGroupVisible(R.id.group_subscribe, false);
-        } else {
+        if (isSubscribeMenu) {
             menu.setGroupVisible(R.id.group_main, false);
             menu.setGroupVisible(R.id.group_subscribe, true);
+        } else if(isCollectionMenu){
+            menu.setGroupVisible(R.id.group_main, false);
+            menu.setGroupVisible(R.id.group_subscribe, false);
+        }else{
+            menu.setGroupVisible(R.id.group_main, true);
+            menu.setGroupVisible(R.id.group_subscribe, false);
         }
         if (isAttention) {
             menu.getItem(3).setIcon(R.mipmap.ic_menu_block);
@@ -356,5 +403,25 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_collection:
+                //点击收藏
+                replaceCollectionFragment();
+                break;
+            case R.id.ll_nothing:
+                //点击没用按钮
+                ToastUtil.showToast("跟你说没用了。。。");
+                break;
+            case R.id.ll_login:
+                //登录跳转
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent,MainActivity.TRANS_TYPE_TRANSLATE);
+                break;
+        }
+        closeDrawLayout();
     }
 }

@@ -7,6 +7,7 @@
     <attr name="navigationView_bg" format="reference"/><!--首页侧滑导航栏-->
     <attr name="navigation_title_text_color" format="color"/><!--首页侧滑导航头部文字颜色-->
     <attr name="menu_color_mode" format="string" /><!--日间夜间模式变化文字-->
+
     <!--***********item条目***********-->
     <attr name="selectorListItem" format="reference" /><!--list条目背景点击-->
     <attr name="titleColor" format="color" /><!--list文字颜色-->
@@ -14,7 +15,9 @@
 
     <!--**************通用文字颜色********-->
     <attr name="text_color_gray" format="color" />
-
     <attr name="btn_bg" format="reference" /><!--按钮颜色-->
+
+    <!--**************登录页面*************-->
+    <attr name="bg_login" format="reference" />
 
 </resources>

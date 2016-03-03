@@ -43,6 +43,9 @@
         <item name="selectorListItem">@drawable/item_bg_select_light</item>
         <item name="titleColor">@color/text_Color_light</item>
         <item name="cardview_background_color">@color/cardView_bg_light</item>
+
+        <!-- 登录页面 -->
+        <item name="bg_login">@mipmap/bg_login_white</item>
     </style>
 
     <!--白天 都是默认application的内容-->
@@ -77,6 +80,9 @@
         <item name="selectorListItem">@drawable/item_bg_select_dark</item>
         <item name="titleColor">@color/text_Color_dark</item>
         <item name="cardview_background_color">@color/cardView_bg_dark</item>
+
+        <!-- 登录页面 -->
+        <item name="bg_login">@mipmap/bg_login_black</item>
     </style>
 
     <!--**************end! 自定义白天 夜间主题***********-->

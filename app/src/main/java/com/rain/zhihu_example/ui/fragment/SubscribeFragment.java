@@ -84,7 +84,6 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
      */
     @Override
     public void onRefresh() {
-        System.out.println("下拉刷新");
         mPresent.requestData(subscribeId,false);
     }
 

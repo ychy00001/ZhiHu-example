@@ -26,6 +26,7 @@
 
         <activity android:name=".ui.activity.MainActivity"/>
         <activity android:name=".ui.activity.ContentDetailActivity"/>
+        <activity android:name=".ui.activity.LoginActivity"/>
     </application>
 
 </manifest>
