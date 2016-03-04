@@ -13,6 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:configChanges="orientation|keyboardHidden|screenSize">
+
+        <!--!start友盟社会化组件-->
+
+
+
+
+        <!--!end友盟社会化组件-->
+
         <activity
             android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
