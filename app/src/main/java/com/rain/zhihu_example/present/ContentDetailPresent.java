@@ -1,9 +1,11 @@
 package com.rain.zhihu_example.present;
 
 import android.text.TextUtils;
+import android.util.Log;
 import com.rain.zhihu_example.mode.StoryMode;
 import com.rain.zhihu_example.mode.bean.StoryBean;
 import com.rain.zhihu_example.ui.view.StoryView;
+import com.rain.zhihu_example.util.BuildConfigUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -15,6 +17,8 @@ import rx.schedulers.Schedulers;
  * 2016/2/4 14:17
  */
 public class ContentDetailPresent {
+    public static final String TAG = "ContentDetailPresent";
+
     private StoryView mView;
     private StoryMode mMode;
     private boolean isThemeDark;
@@ -40,13 +44,14 @@ public class ContentDetailPresent {
         @Override
         public void onCompleted() {
             //处理完成
-            System.out.println("onCompleted");
         }
 
         @Override
         public void onError(Throwable e) {
             //加载失败
-            System.out.println("onError"+e.toString());
+            if(BuildConfigUtil.DEBUG){
+                Log.e(ContentDetailPresent.TAG,e.toString());
+            }
             if(mView != null){
                 mView.setVebView(null);
             }
@@ -54,7 +59,6 @@ public class ContentDetailPresent {
 
         @Override
         public void onNext(StoryBean storyBean) {
-            System.out.println("onNext");
             //处理数据
             if(mView != null && storyBean != null){
                 String linkCss = "<link type ='text/css' rel='stylesheet' href='%s'/>";

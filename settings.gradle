@@ -1,1 +1,1 @@
-include ':app', ':library-youmeng-social'
+include ':app', ':library-sharesdk'

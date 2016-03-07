@@ -38,6 +38,7 @@
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_light</item>
         <item name="btn_bg">@drawable/select_btn_light</item>
+        <item name="text_color_dark_red">@color/color_dark_red_light</item>
 
         <!--条目-->
         <item name="selectorListItem">@drawable/item_bg_select_light</item>
@@ -74,6 +75,7 @@
 
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_dark</item>
+        <item name="text_color_dark_red">@color/color_dark_red_dark</item>
         <item name="btn_bg">@drawable/select_btn_dark</item>
 
         <!--条目-->

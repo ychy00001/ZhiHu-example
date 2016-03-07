@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZhiHu-example.iml" filepath="$PROJECT_DIR$/ZhiHu-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library-youmeng-social/library-youmeng-social.iml" filepath="$PROJECT_DIR$/library-youmeng-social/library-youmeng-social.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-sharesdk/library-sharesdk.iml" filepath="$PROJECT_DIR$/library-sharesdk/library-sharesdk.iml" />
     </modules>
   </component>
 </project>

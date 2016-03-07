@@ -148,6 +148,7 @@ public abstract class ContentView extends FrameLayout{
 
     /**
      * 加载网络数据
+     * 会启动子线程
      */
     protected abstract void loadData();
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/img_ico"
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp" />
+
+    <TextView
+        android:id="@+id/tv_nickName"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/img_ico"
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="用户昵称"/>
+
+    <LinearLayout
+        android:id="@+id/ll_bing_wb"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_nickName"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:background="@drawable/shape_line_gray"/>
+
+        <TextView
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="解绑新浪微博"/>
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:background="@drawable/shape_line_gray"/>
+
+        <TextView
+            android:padding="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="解绑腾讯微博"/>
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:background="@drawable/shape_line_gray"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_login_out"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ll_bing_wb"
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/text_color_dark_red"
+        android:text="登出"/>
+</RelativeLayout>

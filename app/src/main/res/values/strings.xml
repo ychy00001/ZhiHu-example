@@ -10,4 +10,7 @@
     <string name="action_notify">消息</string>
     <string name="action_share">分享</string>
     <string name="action_collection">收藏</string>
+
+
+    <string name="login_def_name">请登录</string>
 </resources>
