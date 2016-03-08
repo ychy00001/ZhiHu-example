@@ -1,1 +1,1 @@
-include ':app', ':library-sharesdk'
+include ':app', ':library-sharesdk', ':library-greendao-generator'

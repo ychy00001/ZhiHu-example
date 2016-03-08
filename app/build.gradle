@@ -47,6 +47,12 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    sourceSets{
+        main{
+            java.srcDirs = ['src/main/java','scr/main/java-gen'];
+        }
+    }
 }
 
 dependencies {
@@ -61,8 +67,12 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'io.reactivex:rxandroid:1.0.1'
+    //网络请求支持
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+    //数据库支持
+    compile 'de.greenrobot:greendao:2.1.0'
+
     compile project(':library-sharesdk')
 }
