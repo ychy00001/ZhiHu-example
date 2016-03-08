@@ -43,6 +43,9 @@ import java.lang.ref.WeakReference;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    public static final int CODE_LOGIN = 1001;//登录的requestCode
+    public static final int CODE_COLLECTION = 1002;//收藏的requestCode
+
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
@@ -93,6 +96,9 @@ public class MainActivity extends BaseActivity
             String ico = data.getStringExtra(LoginActivity.RESULT_ICON);
             Picasso.with(this).load(ico).into(mImgLoginIco);
             mTXLoginNickName.setText(nickName);
+            if(requestCode == CODE_COLLECTION){
+                replaceCollectionFragment();
+            }
         }
     }
 
@@ -445,36 +451,36 @@ public class MainActivity extends BaseActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.ll_nothing:
+                //点击没用按钮
+                ToastUtil.showToast("跟你说没用了。。。");
+                break;
             case R.id.ll_collection:
                 //点击收藏
                 if(LoginUtil.getInstance(this).checkLogin()){
                     replaceCollectionFragment();
                 }else{
-                    startLoginActivity();
+                    startLoginActivity(CODE_COLLECTION);
                 }
                 break;
-            case R.id.ll_nothing:
-                //点击没用按钮
-                ToastUtil.showToast("跟你说没用了。。。");
-                break;
-            case R.id.ll_login:
+            case  R.id.ll_login:
                 //登录跳转
                 if(LoginUtil.getInstance(MainActivity.this).checkLogin()){
                     replaceUserInfoFragment();
                 }else{
-                    startLoginActivity();
+                    startLoginActivity(CODE_LOGIN);
                 }
                 break;
         }
         closeDrawLayout();
-    }
 
+    }
     /**
      * 启动登录页
      */
-    private void startLoginActivity() {
+    private void startLoginActivity(int requestCode) {
         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-        startActivityForResult(intent,MainActivity.TRANS_TYPE_TRANSLATE);
+        startActivityForResult(intent,requestCode,MainActivity.TRANS_TYPE_TRANSLATE);
     }
 
     /**

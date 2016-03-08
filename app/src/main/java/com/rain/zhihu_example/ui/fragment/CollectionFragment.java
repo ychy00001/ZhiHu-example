@@ -52,7 +52,8 @@ public class CollectionFragment extends BaseFragment {
 
     @Override
     protected void requestData() {
-        //请求数据
+        //读取本地数据库数据
+
     }
 
 

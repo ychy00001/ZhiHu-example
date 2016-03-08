@@ -11,7 +11,7 @@ import cn.sharesdk.framework.PlatformActionListener;
  *         15:08
  */
 public class ShareSDKUtil {
-    //登录新浪微博
+    //登录第三方平台
     public static void login(Platform platform, PlatformActionListener listener){
         if(platform.isValid()){
             platform.removeAccount();
