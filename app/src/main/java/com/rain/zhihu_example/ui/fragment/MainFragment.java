@@ -38,6 +38,7 @@ import retrofit2.http.GET;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -380,7 +381,13 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         public void onItemClick(View view, int position) {
             //跳转页面详情Activity
             Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
-            intent.putExtra(Constances.ID_STORY,mMode.getStories().get(position).getId()+"");
+            intent.putExtra(Constances.STORY_ID,mMode.getStories().get(position).getId()+"");
+            intent.putExtra(Constances.STORY_TITLE,mMode.getStories().get(position).getTitle());
+            intent.putExtra(Constances.STORY_TYPE,mMode.getStories().get(position).getType());
+            List<String> mImgs = mMode.getStories().get(position).getImages();
+            if(null != mImgs && mImgs.size()>0){
+                intent.putExtra(Constances.STORY_IMG,mImgs.get(0));
+            }
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
         }

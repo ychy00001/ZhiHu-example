@@ -26,7 +26,7 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
-import com.rain.zhihu_example.ui.base.BaseActivity;
+import com.rain.zhihu_example.ui.base.BaseShareActivity;
 import com.rain.zhihu_example.ui.fragment.CollectionFragment;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
 import com.rain.zhihu_example.ui.fragment.SubscribeFragment;
@@ -36,15 +36,14 @@ import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.util.ToastUtil;
 import com.rain.zhihu_example.util.ViewUtil;
 import com.squareup.picasso.Picasso;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.ref.WeakReference;
 
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseShareActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-
-    public static final int CODE_LOGIN = 1001;//登录的requestCode
-    public static final int CODE_COLLECTION = 1002;//收藏的requestCode
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
@@ -72,6 +71,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mThemeUtil = new ThemeUtil(this);
         initView();
         initListener();
@@ -91,15 +91,19 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == LoginActivity.CODE_LOGIN_FINISH && data != null){
-            String nickName = data.getStringExtra(LoginActivity.RESULT_NICKNAME);
-            String ico = data.getStringExtra(LoginActivity.RESULT_ICON);
-            Picasso.with(this).load(ico).into(mImgLoginIco);
-            mTXLoginNickName.setText(nickName);
-            if(requestCode == CODE_COLLECTION){
+        if(resultCode == Constances.CODE_RESULT_LOGIN_FINISH && data != null){
+            settingLogin(data.getStringExtra(LoginActivity.RESULT_NICKNAME),
+                    data.getStringExtra(LoginActivity.RESULT_ICON));
+            if(requestCode == Constances.CODE_REQUEST_COLLECTION){
                 replaceCollectionFragment();
             }
         }
+    }
+
+    //设置登录
+    private void settingLogin(String nickName,String ico) {
+        Picasso.with(this).load(ico).into(mImgLoginIco);
+        mTXLoginNickName.setText(nickName);
     }
 
     /**
@@ -446,6 +450,7 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -460,7 +465,7 @@ public class MainActivity extends BaseActivity
                 if(LoginUtil.getInstance(this).checkLogin()){
                     replaceCollectionFragment();
                 }else{
-                    startLoginActivity(CODE_COLLECTION);
+                    startLoginActivity(Constances.CODE_REQUEST_COLLECTION);
                 }
                 break;
             case  R.id.ll_login:
@@ -468,20 +473,14 @@ public class MainActivity extends BaseActivity
                 if(LoginUtil.getInstance(MainActivity.this).checkLogin()){
                     replaceUserInfoFragment();
                 }else{
-                    startLoginActivity(CODE_LOGIN);
+                    startLoginActivity(Constances.CODE_REQUEST_LOGIN);
                 }
                 break;
         }
         closeDrawLayout();
 
     }
-    /**
-     * 启动登录页
-     */
-    private void startLoginActivity(int requestCode) {
-        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-        startActivityForResult(intent,requestCode,MainActivity.TRANS_TYPE_TRANSLATE);
-    }
+
 
     /**
      * 登出用户
@@ -490,5 +489,29 @@ public class MainActivity extends BaseActivity
         mImgLoginIco.setImageResource(R.mipmap.user_default_avatar);
         mTXLoginNickName.setText(getResources().getString(R.string.login_def_name));
         initFragment();
+    }
+
+    //接受登录成功的消息
+    @Subscribe
+    public void onEventMainThread(LoginEvent event){
+            settingLogin(event.getNickName(),event.getIco());
+    }
+
+    /**
+     * 登录事件
+     */
+    public static class LoginEvent {
+        private String nickName;
+        private String ico;
+        public LoginEvent(String nickName,String ico) {
+            this.nickName = nickName;
+            this.ico = ico;
+        }
+        public String getNickName(){
+            return nickName;
+        }
+        public String getIco(){
+            return ico;
+        }
     }
 }

@@ -13,6 +13,7 @@ import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 import com.rain.zhihu_example.R;
+import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.mode.bean.LoginBean;
 import com.rain.zhihu_example.ui.base.BaseShareActivity;
 import com.rain.zhihu_example.util.BuildConfigUtil;
@@ -31,7 +32,6 @@ import java.util.HashMap;
 public class LoginActivity extends BaseShareActivity implements View.OnClickListener {
 
     public static final String TAG = "LoginActivity";
-    public static final int CODE_LOGIN_FINISH = 1001;//登录成功
 
     public static final String RESULT_NICKNAME = "nick_name";
     public static final String RESULT_ICON = "icon";
@@ -113,7 +113,7 @@ public class LoginActivity extends BaseShareActivity implements View.OnClickList
                 Intent intent = new Intent();
                 intent.putExtra(LoginActivity.RESULT_NICKNAME,bean.getNickName());
                 intent.putExtra(LoginActivity.RESULT_ICON,bean.getIco());
-                setResult(LoginActivity.CODE_LOGIN_FINISH,intent);//返回上一级菜单
+                setResult(Constances.CODE_RESULT_LOGIN_FINISH,intent);//返回上一级菜单
                 finish();
             }
         }

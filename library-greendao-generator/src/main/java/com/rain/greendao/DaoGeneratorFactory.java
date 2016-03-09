@@ -20,19 +20,20 @@ public class DaoGeneratorFactory {
         addNote(schema);
 
         new DaoGenerator().generateAll(schema, "../ZhiHu-example/app/src/main/java-gen");
-//        new DaoGenerator().generateAll(schema, args[0]);
     }
 
     private static void addNote(Schema schema) {
         Entity collection = schema.addEntity("Collection");
-        collection.addIntProperty("storyId").primaryKey().notNull();
-        collection.addStringProperty("image").notNull();
+        collection.addIdProperty().primaryKey();
+        collection.addStringProperty("storyId").notNull();
+        collection.addStringProperty("image");
         collection.addStringProperty("title").notNull();
-        collection.addIntProperty("type").notNull();
+        collection.addIntProperty("type");
+        Property userId = collection.addStringProperty("userId").notNull().getProperty();
 
         Entity user = schema.addEntity("User");
-        Property userPro = user.addIntProperty("userId").primaryKey().notNull().getProperty();
-        ToMany toMany = user.addToMany(collection, userPro);
+        user.addStringProperty("userId").primaryKey().notNull().getProperty();
+        ToMany toMany = user.addToMany(collection, userId);
         toMany.setName("collections");
 
     }

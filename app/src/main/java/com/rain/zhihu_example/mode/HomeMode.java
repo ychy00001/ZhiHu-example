@@ -1,5 +1,8 @@
 package com.rain.zhihu_example.mode;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -48,12 +51,15 @@ public class HomeMode {
 
     public List<TopStoriesEntity> getTop_stories() { return top_stories;}
 
-    public static class StoriesEntity {
+    public static class StoriesEntity implements Parcelable {
         private int type;
         private int id;
         private String ga_prefix;
         private String title;
         private List<String> images;
+
+        public StoriesEntity() {
+        }
 
         public void setType(int type) { this.type = type;}
 
@@ -74,6 +80,40 @@ public class HomeMode {
         public String getTitle() { return title;}
 
         public List<String> getImages() { return images;}
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(type);
+            dest.writeInt(id);
+            dest.writeString(ga_prefix);
+            dest.writeStringList(images);
+        }
+
+        public static final Parcelable.Creator<StoriesEntity> CREATOR = new Parcelable.Creator<StoriesEntity>(){
+
+            @Override
+            public StoriesEntity createFromParcel(Parcel source) {
+                return new StoriesEntity(source);
+            }
+
+            @Override
+            public StoriesEntity[] newArray(int size) {
+                return new StoriesEntity[size];
+            }
+        };
+
+        private StoriesEntity(Parcel in) {
+            type = in.readInt();
+            id = in.readInt();
+            ga_prefix = in.readString();
+            title = in.readString();
+            in.readStringList(images);
+        }
     }
 
     public static class TopStoriesEntity {

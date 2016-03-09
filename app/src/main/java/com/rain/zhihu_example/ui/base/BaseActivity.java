@@ -12,7 +12,8 @@ import com.rain.zhihu_example.ui.activity.SplashActivity;
 
 
 /**
- * Created by Diagrams on 2015/12/22 17:59
+ * 所有Activity基类
+ * Created by yangchunyu on 2015/12/22 17:59
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
