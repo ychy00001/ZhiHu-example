@@ -11,6 +11,7 @@ import butterknife.Bind;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.ui.base.BaseShareActivity;
+import com.rain.zhihu_example.ui.fragment.CollectionFragment;
 import com.rain.zhihu_example.ui.fragment.ContentDetailFragment;
 import com.rain.zhihu_example.util.BuildConfigUtil;
 import com.rain.zhihu_example.util.GreenDaoUtil;
@@ -43,6 +44,8 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     private GreenDaoUtil mGreenDaoUtil;//数据库工具类
     private CollectionDao collectionDao;
     private UserDao userDao;
+
+    private boolean isSendMsg;//标识是否发送了消息至收藏页面
 
     @Override
     protected int setContentLayout() {
@@ -166,6 +169,11 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
                             collection.delete();
                             item.setIcon(R.mipmap.action_collection_false);
                         }
+                    }
+                    //次处点击了收藏 发送消息给CollectionFragment
+                    if(!isSendMsg){
+                        EventBus.getDefault().post(new CollectionFragment.CollectionEvent(true));
+                        isSendMsg = true;
                     }
                 }else{
                     startLoginActivity(Constances.CODE_REQUEST_CONTENT_DETAIL);

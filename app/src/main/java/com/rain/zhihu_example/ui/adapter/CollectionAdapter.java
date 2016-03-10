@@ -71,6 +71,11 @@ public class CollectionAdapter extends BaseAdapter {
         return mCollections.size();
     }
 
+    public void update(List<Collection> collections) {
+        this.mCollections = collections;
+        this.notifyDataSetChanged();
+    }
+
 
     /**
      * 正常条目
