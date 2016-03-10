@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.RainApplication;
 import com.rain.zhihu_example.mode.HomeMode;
+import com.rain.zhihu_example.ui.base.BaseAdapter;
 import com.rain.zhihu_example.util.DateUtil;
 import com.rain.zhihu_example.util.ViewUtil;
 import com.squareup.picasso.Picasso;
@@ -24,7 +25,7 @@ import java.util.Set;
  * Created by yangchunyu
  * 2016/1/26 11:22
  */
-public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MainAdapter extends BaseAdapter {
 
     public static final int TYPE_NORMAL_ITEM = 0;
     public static final int TYPE_DATA_ITEM = 1;
@@ -154,15 +155,5 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    /************************点击处理***********************/
 
-    private OnItemClickListener mOnItemClickListener;
-    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickListener = mOnItemClickListener;
-    }
-    //设置监听
-    public interface OnItemClickListener
-    {
-        void onItemClick(View view, int position);
-    }
 }

@@ -166,6 +166,11 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
                 titleParam.height = titleImgHeight;
             }else if(nowHeight >= titleImgHeight) {//否则置为0
                 titleParam.height = 0;
+                if(dy>0){
+                    ViewHelper.setAlpha(mToolBar,0);
+                }else{
+                    ViewHelper.setAlpha(mToolBar,1);
+                }
             }
             mTitleLayout.setLayoutParams(titleParam);
             mContentLayout.setLayoutParams(contentParam);

@@ -10,10 +10,12 @@
 
     <!--splash 字体大小-->
     <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_hint_size">18sp</dimen>
     <!--end 字体大小-->
 
     <dimen name="hot_text_h_padding">12dp</dimen>
     <dimen name="hot_text_v_padding">6dp</dimen>
     <dimen name="hot_corner_radius" >6dp</dimen>
-    <dimen name="list_header_hight">134dp</dimen>
+    <dimen name="list_header_height">134dp</dimen>
+
 </resources>

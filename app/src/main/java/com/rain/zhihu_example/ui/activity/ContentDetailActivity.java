@@ -18,7 +18,6 @@ import com.rain.zhihu_example.util.LoginUtil;
 import greendao.bean.Collection;
 import greendao.bean.User;
 import greendao.dao.CollectionDao;
-import greendao.dao.DaoMaster;
 import greendao.dao.DaoSession;
 import greendao.dao.UserDao;
 import org.greenrobot.eventbus.EventBus;
@@ -35,7 +34,6 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     private ContentDetailFragment mFragment;
     @Bind(R.id.toolbar) Toolbar mToolbar;
 
-    private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
 
     private String mStoryId;
@@ -63,7 +61,6 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     //初始化数据库所需参数
     private void initDBManager() {
         mGreenDaoUtil = GreenDaoUtil.getInstance(this, GreenDaoUtil.DB_COLLECTION_NAME);
-        mDaoMaster = mGreenDaoUtil.getDaoMaster();
         mDaoSession = mGreenDaoUtil.getDaoSesstion();
         collectionDao = mDaoSession.getCollectionDao();
         userDao = mDaoSession.getUserDao();

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
               android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <com.rain.zhihu_example.widget.LoadMoreRecyclerView
             android:id="@+id/recycle_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </com.rain.zhihu_example.widget.LoadMoreRecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_no_collection"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/text_color_gray"
+            android:text="暂无收藏信息"
+            android:textSize="@dimen/text_hint_size"/>
+</RelativeLayout>

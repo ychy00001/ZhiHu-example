@@ -60,7 +60,12 @@ public class GreenDaoUtil {
         return mDaoMaster.newSession();
     }
 
-    //查询单个Bean对象
+    /**
+     * 查询单个Bean对象
+     *
+     * WhereCondition参数如下:
+     * UserDao.Properties.UserId.eq(uid)
+     */
     @SuppressWarnings("all")
     public<T> T QueryBean(AbstractDao dao,WhereCondition cond,WhereCondition... condMore){
         QueryBuilder<T> qb = dao.queryBuilder();
