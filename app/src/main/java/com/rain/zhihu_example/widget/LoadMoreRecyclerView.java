@@ -484,7 +484,12 @@ public class LoadMoreRecyclerView extends RecyclerView {
      */
     public void notifyLoadMoreFinish(boolean hasMore) {
         setAutoLoadMoreEnable(hasMore);
-        getAdapter().notifyItemRemoved(mLoadMorePosition);
+        if(mIsFooterEnable){
+            getAdapter().notifyItemRemoved(mLoadMorePosition);
+        }else{
+            getAdapter().notifyDataSetChanged();
+        }
+
         mIsLoadingMore = false;
         //继续执行加载更多 用于在网格布局中底部一行没有排满 继续加载更多
         executeLoadMore();

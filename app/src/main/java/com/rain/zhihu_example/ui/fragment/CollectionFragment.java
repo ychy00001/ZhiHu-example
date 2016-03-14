@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,6 @@ import com.rain.zhihu_example.ui.base.BaseAdapter;
 import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.util.GreenDaoUtil;
 import com.rain.zhihu_example.util.LoginUtil;
-import com.rain.zhihu_example.widget.LoadMoreRecyclerView;
 import greendao.bean.Collection;
 import greendao.bean.User;
 import greendao.dao.DaoSession;
@@ -27,6 +28,7 @@ import greendao.dao.UserDao;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,13 +46,17 @@ public class CollectionFragment extends BaseFragment {
 
     public static final String TAG = "CollectionFragment";
 
-    @Bind(R.id.recycle_view) LoadMoreRecyclerView mRecyclerView;
+    @Bind(R.id.recycle_view) RecyclerView mRecyclerView;
     @Bind(R.id.tv_no_collection) TextView mTVNoCollection;
     private GreenDaoUtil mDaoUtil;
     private DaoSession mDaoSession;
     private CollectionAdapter mAdapter;
 
-    private Boolean isRefresh;//标识是否需要刷新页面
+    private String mOperator;//标识操作类型
+    private String mOperatorId;//标识操作StoryId
+    private String mAddTitle;
+    private String mAddImg;
+    private List<Collection> mCollectionLists;
 
     public static CollectionFragment newInstance(Bundle args) {
         CollectionFragment fragment = new CollectionFragment();
@@ -71,7 +77,6 @@ public class CollectionFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isRefresh = false;
         ((MainActivity)getActivity()).setToolbarText("我的收藏");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
     }
@@ -79,10 +84,46 @@ public class CollectionFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(isRefresh && mAdapter != null && mDaoSession != null){
-            mDaoSession.clear();
-            requestData();
+        if(!TextUtils.isEmpty(mOperator) &&
+                !TextUtils.isEmpty(mOperatorId) &&
+                mAdapter != null
+                && mCollectionLists != null){
+            if(mOperator.equals(CollectionEvent.OPERATE_DELETE)
+                    && TextUtils.isEmpty(mAddTitle)){
+                deleteListById(mOperatorId);
+            }
+            setCollectionAdapter(mCollectionLists);
         }
+    }
+
+    /**
+     * 添加条目至收藏列表
+     */
+    private void addListById(String mOperatorId, String mAddTitle, String mAddImg) {
+        Collection collection = new Collection(null,mOperatorId,mAddImg,mAddTitle,null,null);
+        mCollectionLists.add(0,collection);
+    }
+
+    /**
+     * 依靠ID删除所有列表
+     * @param operatorId 操作Story的ID
+     */
+    private void deleteListById(String operatorId) {
+        for(int i=0;i<mCollectionLists.size();i++){
+            if(mCollectionLists.get(i).getStoryId().equals(operatorId)){
+                mCollectionLists.remove(i);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mOperator = "";
+        mOperatorId = "";
+        mAddImg = "";
+        mAddTitle = "";
     }
 
     @Override
@@ -110,23 +151,26 @@ public class CollectionFragment extends BaseFragment {
         }
     }
 
-    private void setCollectionAdapter(final List<Collection> collections) {
+    private void setCollectionAdapter(List<Collection> collections) {
         mContentPage.showSuccessPage();
+        mCollectionLists = collections;
+        //倒序集合  最新收藏放置第一位
+        Collections.reverse(mCollectionLists);
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(collections == null || collections.size() < 1){
+                if(mCollectionLists == null || mCollectionLists.size() < 1){
                     //提示没有收藏
                     mRecyclerView.setVisibility(View.GONE);
                     mTVNoCollection.setVisibility(View.VISIBLE);
                 }else{
                     //显示收藏
                     if(mAdapter == null){
-                        mAdapter  = new CollectionAdapter(collections);
-                        mAdapter.setOnItemClickListener(new MyItemClick(collections));
+                        mAdapter  = new CollectionAdapter(mCollectionLists);
+                        mAdapter.setOnItemClickListener(new MyItemClick(mCollectionLists));
                         mRecyclerView.setAdapter(mAdapter);
                     }else{
-                        mAdapter.update(collections);
+                        mAdapter.update(mCollectionLists);
                     }
                     mRecyclerView.setVisibility(View.VISIBLE);
                     mTVNoCollection.setVisibility(View.GONE);
@@ -166,21 +210,46 @@ public class CollectionFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(CollectionEvent event){
-       isRefresh = event.isChangeCollection();
+        mOperatorId = event.getStoryId();
+        mOperator = event.getOperate();
+        mAddTitle = event.getAddTitle();
+        mAddImg = event.getAddImg();
     }
 
     /**
      * 收藏的Event事件 用于接收收藏页面发送的消息 是否取消/收藏某项
      */
     public static class CollectionEvent{
-        private boolean isChangeCollection;
+        public static final String OPERATE_ADD = "add";//添加
+        public static final String OPERATE_DELETE = "delete";//删除
 
-        public CollectionEvent(boolean isChangeCollection) {
-            this.isChangeCollection = isChangeCollection;
+        private String operate;
+        private String storyId;
+
+        private String addTitle;
+        private String addImg;
+
+        public CollectionEvent(String operate,String id,String addTitle,String addImg) {
+            this.operate = operate;
+            this.storyId = id;
+            this.addTitle = addTitle;
+            this.addImg = addImg;
         }
 
-        public boolean isChangeCollection() {
-            return isChangeCollection;
+        public String getOperate() {
+            return operate;
+        }
+
+        public String getStoryId() {
+            return storyId;
+        }
+
+        public String getAddTitle() {
+            return addTitle;
+        }
+
+        public String getAddImg() {
+            return addImg;
         }
     }
 }

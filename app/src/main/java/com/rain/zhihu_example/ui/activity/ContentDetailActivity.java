@@ -45,8 +45,6 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     private CollectionDao collectionDao;
     private UserDao userDao;
 
-    private boolean isSendMsg;//标识是否发送了消息至收藏页面
-
     @Override
     protected int setContentLayout() {
         return R.layout.activity_content_detent;
@@ -164,16 +162,15 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
                             //没有收藏  添加收藏
                             addCollectionToDB(uid, collectionDao);
                             item.setIcon(R.mipmap.action_collection_true);
+                            EventBus.getDefault().post(new CollectionFragment.CollectionEvent(CollectionFragment.CollectionEvent.OPERATE_ADD
+                            ,mStoryId,mStoryTitle,mStoryImg));
                         }else{
                             //有收藏  删除收藏
                             collection.delete();
                             item.setIcon(R.mipmap.action_collection_false);
+                            EventBus.getDefault().post(new CollectionFragment.CollectionEvent(CollectionFragment.CollectionEvent.OPERATE_DELETE
+                                    ,mStoryId,null,null));
                         }
-                    }
-                    //次处点击了收藏 发送消息给CollectionFragment
-                    if(!isSendMsg){
-                        EventBus.getDefault().post(new CollectionFragment.CollectionEvent(true));
-                        isSendMsg = true;
                     }
                 }else{
                     startLoginActivity(Constances.CODE_REQUEST_CONTENT_DETAIL);
