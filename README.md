@@ -21,3 +21,6 @@
 1. rxAndroid:'io.reactivex:rxandroid:1.0.1'
 2. 网络请求依赖库：'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
 3. 网络请求依赖库：'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
+
+
+>本项目为自己练手项目，未经允许禁止任何商业活动。如侵犯知乎日报相关各种权限，立即删除该项目。
