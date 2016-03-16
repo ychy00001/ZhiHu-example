@@ -36,6 +36,8 @@
     <color name="transparent">#00000000</color>
     <color name="color_gray_light">#666666</color>
     <color name="color_gray_dark">#999999</color>
+    <color name="color_dark_red_light">#930000</color>
+    <color name="color_dark_red_dark">#EA0000</color>
     <color name="color_black_small">#252525</color>
     <color name="color_gray_small">#cccccc</color>
 

@@ -23,10 +23,10 @@ import com.rain.zhihu_example.ui.activity.MainActivity;
 import com.rain.zhihu_example.ui.adapter.MainAdapter;
 import com.rain.zhihu_example.ui.adapter.MainHeadAdapter;
 import com.rain.zhihu_example.ui.base.BaseActivity;
+import com.rain.zhihu_example.ui.base.BaseAdapter;
 import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.util.CommonUtil;
 import com.rain.zhihu_example.util.DateUtil;
-import com.rain.zhihu_example.util.ToastUtil;
 import com.rain.zhihu_example.util.ViewUtil;
 import com.rain.zhihu_example.widget.LoadMoreRecyclerView;
 import okhttp3.*;
@@ -38,6 +38,7 @@ import retrofit2.http.GET;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +51,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public static final int LOAD_TYPE_REFRESH = 0;//加载类型 下拉刷新
     public static final int LOAD_TYPE_LOADMORE = 1;//加载类型 上拉加载更多
+    public static final int LOAD_TYPE_CACHE= 2;//加载类型 加载缓存
 
 
     private final float POINT_MARGIN = 3;//小点的margin值 dp
@@ -69,6 +71,8 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private LinearLayout pointLayout;
     private ImageView focusPoint;
     private int pointSize = 0;
+
+    private boolean isFinallyShowPage;//最终显示成功页面 用于断网加载缓存后 显示缓存数据
 
     public static MainFragment newInstance(Bundle args) {
         MainFragment fragment = new MainFragment();
@@ -250,7 +254,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     protected void requestData() {
         data = null;
-        requestData(true, LOAD_TYPE_REFRESH);
+        requestData(true, LOAD_TYPE_CACHE);
         requestData(false, LOAD_TYPE_REFRESH);
     }
 
@@ -276,7 +280,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         Retrofit retrofit = build.build();
 
         Call<HomeMode> call;
-        if (loadType == LOAD_TYPE_REFRESH) {//刷新
+        if (loadType == LOAD_TYPE_REFRESH || loadType == LOAD_TYPE_CACHE) {//刷新
             Apis.MainDataService mainService = retrofit.create(Apis.MainDataService.class);
             call = mainService.requestHomeData();
             call.enqueue(new MyCallBack(loadType));
@@ -324,7 +328,7 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         public void onResponse(Response<HomeMode> response) {
             HomeMode mode = response.body();
             if (mode != null) {
-                if (loadType == LOAD_TYPE_REFRESH) {//下拉刷新
+                if (loadType == LOAD_TYPE_REFRESH || loadType == LOAD_TYPE_CACHE) {//下拉刷新
                     //设置头部轮播图信息
                     mHeadAdapter = null;
                     mHeadAdapter = new MainHeadAdapter(mode.getTop_stories(),MainFragment.this.getActivity());
@@ -351,7 +355,10 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                         mRecyclerView.notifyLoadMoreFinish(true);
                     }
                 }
-
+                if(loadType == LOAD_TYPE_CACHE){
+                    isFinallyShowPage = true;
+                    System.out.println("加载缓存成功，设置不需要显示失败页面");
+                }
             }
             stopLayoutRefresh();
             mContentPage.notifyDataChange(mode);
@@ -360,16 +367,19 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         @Override
         public void onFailure(Throwable t) {
-            mContentPage.notifyDataChange(null);
-            ToastUtil.showToast("请求错误");
             stopLayoutRefresh();
+            if(isFinallyShowPage){
+                mContentPage.showSuccessPage();
+            }else{
+                mContentPage.notifyDataChange(null);
+            }
         }
     }
 
     /**
      * 条目点击事件处理
      */
-    private class MyItemClick implements MainAdapter.OnItemClickListener{
+    private class MyItemClick implements BaseAdapter.OnItemClickListener{
 
         private HomeMode mMode;
         public MyItemClick(HomeMode mode) {
@@ -380,7 +390,13 @@ public class MainFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         public void onItemClick(View view, int position) {
             //跳转页面详情Activity
             Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
-            intent.putExtra(Constances.ID_STORY,mMode.getStories().get(position).getId()+"");
+            intent.putExtra(Constances.STORY_ID,mMode.getStories().get(position).getId()+"");
+            intent.putExtra(Constances.STORY_TITLE,mMode.getStories().get(position).getTitle());
+            intent.putExtra(Constances.STORY_TYPE,mMode.getStories().get(position).getType());
+            List<String> mImgs = mMode.getStories().get(position).getImages();
+            if(null != mImgs && mImgs.size()>0){
+                intent.putExtra(Constances.STORY_IMG,mImgs.get(0));
+            }
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
         }

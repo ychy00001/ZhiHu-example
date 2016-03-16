@@ -7,4 +7,6 @@ package com.rain.zhihu_example.ui.view;
 public interface StoryView {
     void setVebView(String body);
     void setTitleImg(String imgUrl,String imgTitle,String author);
+
+    void setShareMsg(String title,String imgUrl,String shareUrl);
 }

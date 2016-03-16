@@ -1,8 +1,10 @@
 package com.rain.zhihu_example.present;
 
+import android.util.Log;
 import com.rain.zhihu_example.mode.SubscribeMode;
 import com.rain.zhihu_example.mode.bean.SubscribeBean;
 import com.rain.zhihu_example.ui.view.SubscribeView;
+import com.rain.zhihu_example.util.BuildConfigUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -66,18 +68,18 @@ public class SubscribePresent {
         }
         @Override
         public void onCompleted() {
-            System.out.println("请求完成");
             mSubscribeView.loadDataComplete();
         }
 
         @Override
         public void onError(Throwable e) {
-            System.out.println("请求失败"+e.toString());
+            if(BuildConfigUtil.DEBUG){
+                Log.e(ContentDetailPresent.TAG,e.toString());
+            }
         }
 
         @Override
         public void onNext(SubscribeBean o) {
-            System.out.println("onNext");
             if(null != o){
                 if(loadType == LOAD_DATA){
                     System.out.println("下拉刷新完成");

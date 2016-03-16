@@ -38,6 +38,14 @@
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_light</item>
         <item name="btn_bg">@drawable/select_btn_light</item>
+        <item name="text_color_dark_red">@color/color_dark_red_light</item>
+
+        <!--分享-->
+        <item name="ic_share_friend">@drawable/ic_share_friend_white</item>
+        <item name="ic_share_qq">@drawable/ic_share_qq_white</item>
+        <item name="ic_share_qzone">@drawable/ic_share_qzone_white</item>
+        <item name="ic_share_weibo">@drawable/ic_share_weibo_white</item>
+        <item name="ic_share_weixin">@drawable/ic_share_weixin_white</item>
 
         <!--条目-->
         <item name="selectorListItem">@drawable/item_bg_select_light</item>
@@ -74,7 +82,15 @@
 
         <!--通用-->
         <item name="text_color_gray">@color/color_gray_dark</item>
+        <item name="text_color_dark_red">@color/color_dark_red_dark</item>
         <item name="btn_bg">@drawable/select_btn_dark</item>
+
+        <!--分享-->
+        <item name="ic_share_friend">@drawable/ic_share_friend_black</item>
+        <item name="ic_share_qq">@drawable/ic_share_qq_black</item>
+        <item name="ic_share_qzone">@drawable/ic_share_qzone_black</item>
+        <item name="ic_share_weibo">@drawable/ic_share_weibo_black</item>
+        <item name="ic_share_weixin">@drawable/ic_share_weixin_black</item>
 
         <!--条目-->
         <item name="selectorListItem">@drawable/item_bg_select_dark</item>

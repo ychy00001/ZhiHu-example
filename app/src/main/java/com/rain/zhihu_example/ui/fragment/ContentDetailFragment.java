@@ -45,13 +45,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Bind(R.id.tv_title) TextView mTitleText;
     @Bind(R.id.tv_author) TextView mAuthorText;
     @Bind(R.id.layout_content) RelativeLayout mContentLayout;
-    @Bind(R.id.imgLayout) RelativeLayout mTitleImgLayout;//内部布局 包括文字 图片
 
-    private String storyId;
     private Toolbar mToolBar;
     private ContentDetailPresent mPresent;
     private int titleImgHeight;//头部imgView的高度
-    private ThemeUtil mThemeUtil;
     private boolean isDark;
 
 
@@ -64,7 +61,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mThemeUtil = new ThemeUtil(getActivity());
+        ThemeUtil mThemeUtil = new ThemeUtil(getActivity());
         isDark = mThemeUtil.isThemeDark();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -93,6 +90,8 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         mWebView.setOnScrollListener(new MyScrollListener());
     }
 
+
+
     @Override
     protected View getSuccessView() {
         return View.inflate(mContext, R.layout.fragment_content_detail,null);
@@ -101,7 +100,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Override
     protected void requestData() {
         mPresent = new ContentDetailPresent(this,isDark);
-        storyId = getArguments().getString(Constances.ID_STORY);
+        String storyId = getArguments().getString(Constances.STORY_ID);
         //请求网络
         if(BuildConfigUtil.DEBUG){
             Log.e(TAG, "requestData请求ID:" + storyId);
@@ -127,6 +126,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         mAuthorText.setText(author);
     }
 
+    @Override
+    public void setShareMsg(String title, String imgUrl, String shareUrl) {
+        ((ContentDetailActivity)getActivity()).setShareMsg(title,imgUrl,shareUrl);
+    }
 
     /**
      * WebView滑动事件
@@ -169,6 +172,11 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
                 titleParam.height = titleImgHeight;
             }else if(nowHeight >= titleImgHeight) {//否则置为0
                 titleParam.height = 0;
+                if(dy>0){
+                    ViewHelper.setAlpha(mToolBar,0);
+                }else{
+                    ViewHelper.setAlpha(mToolBar,1);
+                }
             }
             mTitleLayout.setLayoutParams(titleParam);
             mContentLayout.setLayoutParams(contentParam);

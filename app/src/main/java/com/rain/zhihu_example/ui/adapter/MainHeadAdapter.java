@@ -74,8 +74,13 @@ public class MainHeadAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 //跳转页面详情Activity
+                if(mEntity == null){
+                    return;
+                }
                 Intent intent = new Intent(mActivity, ContentDetailActivity.class);
-                intent.putExtra(Constances.ID_STORY,mEntity.getId()+"");
+                intent.putExtra(Constances.STORY_ID,mEntity.getId()+"");
+                intent.putExtra(Constances.STORY_TITLE,mEntity.getTitle()+"");
+                intent.putExtra(Constances.STORY_IMG,mEntity.getImage()+"");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ((BaseActivity)mActivity).startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
             }

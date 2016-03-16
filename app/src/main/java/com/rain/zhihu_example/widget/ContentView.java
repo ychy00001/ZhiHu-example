@@ -106,6 +106,19 @@ public abstract class ContentView extends FrameLayout{
             }
         });
     }
+
+    /**
+     * 直接展示成功页面
+     */
+    public void showSuccessPage(){
+        mState = checkData(new Object());
+        CommonUtil.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                showPage();
+            }
+        });
+    }
     /**
      * 根据返回数据的类型来判断当前的状态
      * @param data 数据对象
@@ -148,6 +161,7 @@ public abstract class ContentView extends FrameLayout{
 
     /**
      * 加载网络数据
+     * 会启动子线程
      */
     protected abstract void loadData();
 }

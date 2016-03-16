@@ -8,7 +8,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -20,44 +19,49 @@ import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import butterknife.OnClick;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.global.Constances;
-import com.rain.zhihu_example.ui.base.BaseActivity;
+import com.rain.zhihu_example.ui.base.BaseShareActivity;
 import com.rain.zhihu_example.ui.fragment.CollectionFragment;
 import com.rain.zhihu_example.ui.fragment.MainFragment;
 import com.rain.zhihu_example.ui.fragment.SubscribeFragment;
+import com.rain.zhihu_example.ui.fragment.UserInfoFragment;
+import com.rain.zhihu_example.util.LoginUtil;
 import com.rain.zhihu_example.util.ThemeUtil;
 import com.rain.zhihu_example.util.ToastUtil;
 import com.rain.zhihu_example.util.ViewUtil;
+import com.squareup.picasso.Picasso;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.ref.WeakReference;
 
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseShareActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private FloatingActionButton mFab;//浮动按钮
     private Toolbar mToolbar;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
     private LinearLayout mLayoutCollection;//收藏布局
     private LinearLayout mLayoutNothing;//没用布局
     private LinearLayout mLayoutLogin;//登录布局
+    private ImageView mImgLoginIco;//登录用户ico
+    private TextView mTXLoginNickName;//登录用户昵称
     private Fragment mFragment;
-    private ImageView mLoginImg;
     private ThemeUtil mThemeUtil;
 
     private boolean isSubscribeMenu;//是否显示订阅的菜单
-    private boolean isCollectionMenu;//是否显示收藏的菜单
+    private boolean isNoRightMenu;//是否显示收藏的菜单
     private boolean isAttention;//是否关注（在订阅标签下）
     private ImageView windowImg;
     private WindowManager wm;
     private WeakReference<Bitmap> bmp;
-    private DrawerLayout drawer;
 
     @Override
     protected int setContentLayout() {
@@ -67,10 +71,39 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mThemeUtil = new ThemeUtil(this);
         initView();
         initListener();
         initFragment();
+        checkLogin();//检查登录
+    }
+
+    private void checkLogin(){
+        if(LoginUtil.getInstance(this).checkLogin()){
+            Picasso.with(this).load(LoginUtil.getInstance(this).getIco()).into(mImgLoginIco);
+            mTXLoginNickName.setText(LoginUtil.getInstance(this).getUserName());
+        }
+    }
+    /**
+     * 登录界面返回数据
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Constances.CODE_RESULT_LOGIN_FINISH && data != null){
+            settingLogin(data.getStringExtra(LoginActivity.RESULT_NICKNAME),
+                    data.getStringExtra(LoginActivity.RESULT_ICON));
+            if(requestCode == Constances.CODE_REQUEST_COLLECTION){
+                replaceCollectionFragment();
+            }
+        }
+    }
+
+    //设置登录
+    private void settingLogin(String nickName,String ico) {
+        Picasso.with(this).load(ico).into(mImgLoginIco);
+        mTXLoginNickName.setText(nickName);
     }
 
     /**
@@ -78,7 +111,7 @@ public class MainActivity extends BaseActivity
      */
     private void initFragment() {
         isSubscribeMenu = false;
-        isCollectionMenu = false;
+        isNoRightMenu = false;
         mFragment = MainFragment.newInstance(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, MainFragment.TAG)
@@ -90,14 +123,14 @@ public class MainActivity extends BaseActivity
      */
     private void initView() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mLoginImg = (ImageView) findViewById(R.id.imageView);
+
         mLayoutCollection = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_collection);
         mLayoutNothing = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_nothing);
         mLayoutLogin = (LinearLayout) mNavigationView.getHeaderView(0).findViewById(R.id.ll_login);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mImgLoginIco = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.img_ico);
+        mTXLoginNickName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.tv_nickName);
 
         setSupportActionBar(mToolbar);
         //设置选中首页
@@ -123,6 +156,7 @@ public class MainActivity extends BaseActivity
         showExitDialog();
     }
 
+    @SuppressWarnings("deprecation")
     private void showExitDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_dialog, null);
         final AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
@@ -134,7 +168,7 @@ public class MainActivity extends BaseActivity
         Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
         lp.width = (int) (display.getWidth() * 0.9); //设置宽度
-        lp.height = (int) (ViewUtil.dp2px(MainActivity.this, 200)); //设置宽度
+        lp.height = (ViewUtil.dp2px(MainActivity.this, 200)); //设置宽度
         lp.gravity = Gravity.CENTER;
         dialog.getWindow().setAttributes(lp);
 
@@ -144,15 +178,14 @@ public class MainActivity extends BaseActivity
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialog != null) {
-                    MainActivity.this.finish();
-                }
+                dialog.dismiss();
+                MainActivity.this.finish();
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialog != null && dialog.isShowing()) {
+                if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
             }
@@ -255,13 +288,14 @@ public class MainActivity extends BaseActivity
                 | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         params.type = WindowManager.LayoutParams.TYPE_TOAST;
         params.format = PixelFormat.RGBA_8888;
-        params.gravity = Gravity.LEFT + Gravity.TOP;
+        params.gravity = Gravity.START + Gravity.TOP;
         wm.addView(windowImg, params);
     }
 
     /**
      * 截取屏幕
      */
+    @SuppressWarnings("deprecation")
     public WeakReference<Bitmap> myShot(Activity activity) {
         // 获取windows中最顶层的view
         View view = activity.getWindow().getDecorView();
@@ -339,20 +373,20 @@ public class MainActivity extends BaseActivity
      * 关闭侧滑菜单
      */
     private void closeDrawLayout(){
-        if(drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
+        if(mDrawer.isDrawerOpen(GravityCompat.START)){
+            mDrawer.closeDrawer(GravityCompat.START);
         }
     }
     /**
-     * 跳转收藏Fragment
+     * 跳转用户信息Fragment
      */
-    private void replaceCollectionFragment(){
+    private void replaceUserInfoFragment(){
         isSubscribeMenu = false;
-        isCollectionMenu = true;
+        isNoRightMenu = true;
 
-        mFragment = CollectionFragment.newInstance(getIntent().getExtras());
+        mFragment = UserInfoFragment.newInstance(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mFragment, CollectionFragment.TAG)
+                .replace(R.id.fragment_container, mFragment, UserInfoFragment.TAG)
                 .commit();
         //重新请求菜单
         invalidateOptionsMenu();
@@ -362,7 +396,7 @@ public class MainActivity extends BaseActivity
      */
     private void replaceSubscribeFragment(String subscribeId, String subscribeName) {
         isSubscribeMenu = true;
-        isCollectionMenu = false;
+        isNoRightMenu = false;
 
         isAttention = false;
         Bundle extras = getIntent().getExtras();
@@ -378,14 +412,27 @@ public class MainActivity extends BaseActivity
         //重新请求菜单
         invalidateOptionsMenu();
     }
+    /**
+     * 跳转登录界面Fragment
+     */
+    private void replaceCollectionFragment(){
+        isSubscribeMenu = false;
+        isNoRightMenu = true;
 
+        mFragment = CollectionFragment.newInstance(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, mFragment, CollectionFragment.TAG)
+                .commit();
+        //重新请求菜单
+        invalidateOptionsMenu();
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (isSubscribeMenu) {
             menu.setGroupVisible(R.id.group_main, false);
             menu.setGroupVisible(R.id.group_subscribe, true);
-        } else if(isCollectionMenu){
+        } else if(isNoRightMenu){
             menu.setGroupVisible(R.id.group_main, false);
             menu.setGroupVisible(R.id.group_subscribe, false);
         }else{
@@ -403,25 +450,68 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.ll_collection:
-                //点击收藏
-                replaceCollectionFragment();
-                break;
             case R.id.ll_nothing:
                 //点击没用按钮
                 ToastUtil.showToast("跟你说没用了。。。");
                 break;
-            case R.id.ll_login:
+            case R.id.ll_collection:
+                //点击收藏
+                if(LoginUtil.getInstance(this).checkLogin()){
+                    replaceCollectionFragment();
+                }else{
+                    startLoginActivity(Constances.CODE_REQUEST_COLLECTION);
+                }
+                break;
+            case  R.id.ll_login:
                 //登录跳转
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent,MainActivity.TRANS_TYPE_TRANSLATE);
+                if(LoginUtil.getInstance(MainActivity.this).checkLogin()){
+                    replaceUserInfoFragment();
+                }else{
+                    startLoginActivity(Constances.CODE_REQUEST_LOGIN);
+                }
                 break;
         }
         closeDrawLayout();
+
+    }
+
+
+    /**
+     * 登出用户
+     */
+    public void loginOut(){
+        mImgLoginIco.setImageResource(R.mipmap.user_default_avatar);
+        mTXLoginNickName.setText(getResources().getString(R.string.login_def_name));
+        initFragment();
+    }
+
+    //接受登录成功的消息
+    @Subscribe
+    public void onEventMainThread(LoginEvent event){
+            settingLogin(event.getNickName(),event.getIco());
+    }
+
+    /**
+     * 登录事件
+     */
+    public static class LoginEvent {
+        private String nickName;
+        private String ico;
+        public LoginEvent(String nickName,String ico) {
+            this.nickName = nickName;
+            this.ico = ico;
+        }
+        public String getNickName(){
+            return nickName;
+        }
+        public String getIco(){
+            return ico;
+        }
     }
 }

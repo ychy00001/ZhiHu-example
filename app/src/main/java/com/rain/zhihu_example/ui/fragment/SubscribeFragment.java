@@ -20,6 +20,8 @@ import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.ui.view.SubscribeView;
 import com.rain.zhihu_example.widget.LoadMoreRecyclerView;
 
+import java.util.List;
+
 /**
  * 订阅页面展示
  * Created by yangchunyu
@@ -173,7 +175,13 @@ public class SubscribeFragment extends BaseFragment implements SwipeRefreshLayou
             int storePosition = position-2;
             //跳转页面详情Activity
             Intent intent = new Intent(getActivity(), ContentDetailActivity.class);
-            intent.putExtra(Constances.ID_STORY,mData.getStories().get(storePosition).getId()+"");
+            intent.putExtra(Constances.STORY_ID,mData.getStories().get(storePosition).getId()+"");
+            intent.putExtra(Constances.STORY_TITLE,mData.getStories().get(storePosition).getTitle());
+            intent.putExtra(Constances.STORY_TYPE,mData.getStories().get(storePosition).getType());
+            List<String> imgs =  mData.getStories().get(storePosition).getImages();
+            if(null != imgs && imgs.size()>0){
+                intent.putExtra(Constances.STORY_IMG,imgs.get(0));
+            }
             intent.putExtra(Constances.IS_STORY_IMG,false);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent, BaseActivity.TRANS_TYPE_TRANSLATE);
