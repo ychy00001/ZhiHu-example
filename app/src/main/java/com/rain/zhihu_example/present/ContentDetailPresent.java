@@ -85,7 +85,7 @@ public class ContentDetailPresent {
                 }else{
                     mView.setTitleImg(storyBean.getImage(),storyBean.getTitle(),storyBean.getImage_source());
                 }
-
+                mView.setShareMsg(storyBean.getTitle(),storyBean.getImage(),storyBean.getShare_url());
             }
         }
     }

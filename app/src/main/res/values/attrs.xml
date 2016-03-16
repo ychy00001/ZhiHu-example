@@ -8,6 +8,13 @@
     <attr name="navigation_title_text_color" format="color"/><!--首页侧滑导航头部文字颜色-->
     <attr name="menu_color_mode" format="string" /><!--日间夜间模式变化文字-->
 
+    <!--分享-->
+    <attr name="ic_share_friend" format="reference" />
+    <attr name="ic_share_qq" format="reference" />
+    <attr name="ic_share_qzone" format="reference" />
+    <attr name="ic_share_weibo" format="reference" />
+    <attr name="ic_share_weixin" format="reference" />
+
     <!--***********item条目***********-->
     <attr name="selectorListItem" format="reference" /><!--list条目背景点击-->
     <attr name="titleColor" format="color" /><!--list文字颜色-->

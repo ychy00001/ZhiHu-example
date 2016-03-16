@@ -90,6 +90,8 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         mWebView.setOnScrollListener(new MyScrollListener());
     }
 
+
+
     @Override
     protected View getSuccessView() {
         return View.inflate(mContext, R.layout.fragment_content_detail,null);
@@ -124,6 +126,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
         mAuthorText.setText(author);
     }
 
+    @Override
+    public void setShareMsg(String title, String imgUrl, String shareUrl) {
+        ((ContentDetailActivity)getActivity()).setShareMsg(title,imgUrl,shareUrl);
+    }
 
     /**
      * WebView滑动事件

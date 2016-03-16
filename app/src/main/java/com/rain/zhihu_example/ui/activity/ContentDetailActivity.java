@@ -13,6 +13,7 @@ import com.rain.zhihu_example.global.Constances;
 import com.rain.zhihu_example.ui.base.BaseShareActivity;
 import com.rain.zhihu_example.ui.fragment.CollectionFragment;
 import com.rain.zhihu_example.ui.fragment.ContentDetailFragment;
+import com.rain.zhihu_example.ui.fragment.ShareFragment;
 import com.rain.zhihu_example.util.BuildConfigUtil;
 import com.rain.zhihu_example.util.GreenDaoUtil;
 import com.rain.zhihu_example.util.LoginUtil;
@@ -45,6 +46,13 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     private CollectionDao collectionDao;
     private UserDao userDao;
 
+    private ShareFragment mShareFragment;
+
+    //分享内容
+    private String mShareTitle;
+    private String mShareImgUrl;
+    private String mShareUrl;
+
     @Override
     protected int setContentLayout() {
         return R.layout.activity_content_detent;
@@ -57,6 +65,7 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
         initDBManager();
         toolBarSetting();
         initFragment();
+        initShare();
     }
 
     //初始化数据库所需参数
@@ -122,6 +131,7 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.content_detail, menu);
         MenuItem item = menu.findItem(R.id.action_collection);
+        menu.findItem(R.id.action_share).setEnabled(false);
         //设置收藏点击效果
         item.setIcon(R.mipmap.action_collection_false);
         if(LoginUtil.getInstance(this).checkLogin()){
@@ -139,11 +149,23 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
         finish();
     }
 
+    private void initShare() {
+        mShareFragment = ShareFragment.newInstance(null);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_share:
+                if(BuildConfigUtil.DEBUG)
+                    Log.d(ContentDetailActivity.TAG,"分享");
+                Bundle mBundle = new Bundle();
+                mBundle.putString(ShareFragment.SHARE_BODY,mShareTitle);
+                mBundle.putString(ShareFragment.SHARE_IMG,mShareImgUrl);
+                mBundle.putString(ShareFragment.SHARE_TITLE,mShareTitle);
+                mBundle.putString(ShareFragment.SHARE_WEB_URL,mShareUrl);
                 //分享
+                mShareFragment.show(mBundle,getSupportFragmentManager() , ShareFragment.TAG);
                 break;
             case R.id.action_collection:
                 //收藏
@@ -177,7 +199,7 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
                 }
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**
@@ -199,5 +221,15 @@ public class ContentDetailActivity extends BaseShareActivity implements View.OnC
     private void addUserToDB(String uid, UserDao userDao) {
         User userEntity = new User(uid);
         userDao.insert(userEntity);
+    }
+
+    /**
+     * 设置分享信息
+     */
+    public void setShareMsg(String title, String imgUrl, String shareUrl) {
+        mShareTitle = title;
+        mShareImgUrl = imgUrl;
+        mShareUrl = shareUrl;
+        mToolbar.getMenu().findItem(R.id.action_share).setEnabled(true);
     }
 }
