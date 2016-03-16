@@ -2,6 +2,7 @@ package com.rain.zhihu_example.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -16,6 +17,7 @@ import com.rain.zhihu_example.mode.SplashMode;
 import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.util.CommonUtil;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import okhttp3.*;
 import retrofit2.*;
 import retrofit2.Call;
@@ -39,6 +41,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
 
     private TextView mTvSplsahText;
     private TextView mTitle;
+    private long startTime;
 
     @Override
     protected int setContentLayout() {
@@ -48,6 +51,8 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startTime = SystemClock.currentThreadTimeMillis();
+        System.out.println("开始:"+SystemClock.currentThreadTimeMillis());
         mContext = this;
         assignViews();
         loadCache();
@@ -78,10 +83,12 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         call.enqueue(new Callback<SplashMode>() {
             @Override
             public void onResponse(Response<SplashMode> response) {
+
             }
 
             @Override
             public void onFailure(Throwable t) {
+
             }
         });
 
@@ -93,12 +100,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 Request.Builder builder = request.newBuilder();
-
-                //TODO 在此可以拦截URL 并添加数字签名
-//                String originUrl = request.url().toString();
-//                String sinUrl = originUrl + "";//签名的链接
-//                builder.url(sinUrl);
-
                 if(isCache){
                     builder.cacheControl(CacheControl.FORCE_CACHE);//强制请求网络
                 }else{
@@ -144,12 +145,29 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                         @Override
                         public void run() {
                             String imgUrl = splashMode.getImg();
-                            String text = splashMode.getText();
-                            Picasso.with(RainApplication.getContext()).load(imgUrl).error(R.mipmap.splash).into(mImgStart);
-                            mTitle.setVisibility(View.VISIBLE);
-                            if (!TextUtils.isEmpty(text)) {
-                                mTvSplsahText.setText(text);
-                            }
+                            final String text = splashMode.getText();
+                            Picasso picasso = Picasso.with(RainApplication.getContext());
+                            RequestCreator load = picasso.load(imgUrl);
+                            load.error(R.mipmap.splash);
+                            load.into(mImgStart, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    long endTime = SystemClock.currentThreadTimeMillis();
+                                    System.out.print("执行了:"+(endTime - startTime)+"毫秒");
+                                    mTitle.setVisibility(View.VISIBLE);
+                                    if (!TextUtils.isEmpty(text)) {
+                                        mTvSplsahText.setText(text);
+                                    }
+                                }
+
+                                @Override
+                                public void onError() {
+                                    mTitle.setVisibility(View.VISIBLE);
+                                    if (!TextUtils.isEmpty(text)) {
+                                        mTvSplsahText.setText(text);
+                                    }
+                                }
+                            });
                         }
                     });
                 }
