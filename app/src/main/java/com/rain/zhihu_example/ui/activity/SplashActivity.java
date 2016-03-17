@@ -52,7 +52,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startTime = SystemClock.currentThreadTimeMillis();
-        System.out.println("开始:"+SystemClock.currentThreadTimeMillis());
         mContext = this;
         assignViews();
         loadCache();
@@ -153,7 +152,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                                 @Override
                                 public void onSuccess() {
                                     long endTime = SystemClock.currentThreadTimeMillis();
-                                    System.out.print("执行了:"+(endTime - startTime)+"毫秒");
                                     mTitle.setVisibility(View.VISIBLE);
                                     if (!TextUtils.isEmpty(text)) {
                                         mTvSplsahText.setText(text);
