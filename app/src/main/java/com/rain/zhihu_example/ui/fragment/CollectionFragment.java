@@ -152,7 +152,6 @@ public class CollectionFragment extends BaseFragment {
                 if (null == user) {
                     setCollectionAdapter(null);
                 } else {
-                    userDao.refresh(user);
                     setCollectionAdapter(user.getCollections());
                 }
             }
@@ -162,13 +161,13 @@ public class CollectionFragment extends BaseFragment {
     private void setCollectionAdapter(List<Collection> collections) {
         mContentPage.showSuccessPage();
         mCollectionLists = collections;
-        //倒序集合  最新收藏放置第一位
-        Collections.reverse(mCollectionLists);
         if (mCollectionLists == null || mCollectionLists.size() < 1) {
             //提示没有收藏
             mRecyclerView.setVisibility(View.GONE);
             mTVNoCollection.setVisibility(View.VISIBLE);
         } else {
+            //倒序集合  最新收藏放置第一位
+            Collections.reverse(mCollectionLists);
             //显示收藏
             if (mAdapter == null) {
                 mAdapter = new CollectionAdapter(mCollectionLists);
