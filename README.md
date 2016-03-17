@@ -7,6 +7,8 @@
 2. 仿知乎夜间模式。
 3. 添加本地数据库支持（登录，收藏）
 
+>src同级目录下存放有签名配置文件（signing.properties）,签名文件（ycyApp.jks） 如果运行不正确可以将ycyApp.jsk文件移动到本地目录，并在signing.property的KEYSTORE_FILE字段下填写本地目录绝对路径（例如：C:\\Users\\dell\\Desktop\\smallTown\\ycyApp.jks）
+
 ####第三方库：
 1. View注入：com.jakewharton:butterknife:7.0.1
 2. 图片处理：'com.squareup.picasso:picasso:2.5.2'
