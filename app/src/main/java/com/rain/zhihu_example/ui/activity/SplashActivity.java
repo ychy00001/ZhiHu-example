@@ -1,8 +1,8 @@
 package com.rain.zhihu_example.ui.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -10,18 +10,19 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.rain.zhihu_example.R;
 import com.rain.zhihu_example.api.Apis;
-import com.rain.zhihu_example.global.RainApplication;
+import com.rain.zhihu_example.global.ImageLoaderOptions;
 import com.rain.zhihu_example.mode.SplashMode;
 import com.rain.zhihu_example.ui.base.BaseActivity;
 import com.rain.zhihu_example.util.CommonUtil;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import okhttp3.*;
-import retrofit2.*;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.*;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -31,7 +32,11 @@ import java.io.IOException;
 
 
 /**
- * Created by Diagrams on 2016/1/4 14:47
+ * 进入页面：读取缓存图片 设置给ImgView 若图片错误，则显示默认图片
+ * Splash页面,首页页面请求网络 读取到图片的链接  然后启动异步任务 将图片保存成缓存
+ *
+ * Created by yangchunyu
+ *       2016/1/4 14:47
  */
 public class SplashActivity extends BaseActivity implements Animation.AnimationListener{
     public static final String TAG = "SplashActivity";
@@ -41,7 +46,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
 
     private TextView mTvSplsahText;
     private TextView mTitle;
-    private long startTime;
 
     @Override
     protected int setContentLayout() {
@@ -51,7 +55,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startTime = SystemClock.currentThreadTimeMillis();
         mContext = this;
         assignViews();
         loadCache();
@@ -60,6 +63,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         saveCache();
     }
 
+    //请求网络 保存数据至缓存
     private void saveCache() {
         //初始化OkHttp所用的缓存 以及OKhttp请求
         File cacheFile = new File(mContext.getCacheDir(), "zhihu");
@@ -87,7 +91,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
 
             @Override
             public void onFailure(Throwable t) {
-
+                showNormalView();
             }
         });
 
@@ -113,7 +117,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         };
     }
     /**
-     * 加载数据请求首页图片链接
+     * 加载缓存数据
      */
     private void loadCache() {
         //初始化OkHttp所用的缓存 以及OKhttp请求
@@ -145,13 +149,10 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                         public void run() {
                             String imgUrl = splashMode.getImg();
                             final String text = splashMode.getText();
-                            Picasso picasso = Picasso.with(RainApplication.getContext());
-                            RequestCreator load = picasso.load(imgUrl);
-                            load.error(R.mipmap.splash);
-                            load.into(mImgStart, new com.squareup.picasso.Callback() {
+                            ImageLoader.getInstance().displayImage(imgUrl,mImgStart, ImageLoaderOptions.splash_options,new SimpleImageLoadingListener(){
                                 @Override
-                                public void onSuccess() {
-                                    long endTime = SystemClock.currentThreadTimeMillis();
+                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                    super.onLoadingComplete(imageUri, view, loadedImage);
                                     mTitle.setVisibility(View.VISIBLE);
                                     if (!TextUtils.isEmpty(text)) {
                                         mTvSplsahText.setText(text);
@@ -159,13 +160,34 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
                                 }
 
                                 @Override
-                                public void onError() {
+                                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                                    super.onLoadingFailed(imageUri, view, failReason);
                                     mTitle.setVisibility(View.VISIBLE);
                                     if (!TextUtils.isEmpty(text)) {
                                         mTvSplsahText.setText(text);
                                     }
                                 }
                             });
+//                            Picasso picasso = Picasso.with(RainApplication.getContext());
+//                            RequestCreator load = picasso.load(imgUrl);
+//                            load.into(mImgStart, new com.squareup.picasso.Callback() {
+//                                @Override
+//                                public void onSuccess() {
+//                                    mTitle.setVisibility(View.VISIBLE);
+//                                    if (!TextUtils.isEmpty(text)) {
+//                                        mTvSplsahText.setText(text);
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onError() {
+//                                    mTitle.setVisibility(View.VISIBLE);
+//                                    if (!TextUtils.isEmpty(text)) {
+//                                        mTvSplsahText.setText(text);
+//                                    }
+//                                    mImgStart.setImageResource(R.mipmap.splash);
+//                                }
+//                            });
                         }
                     });
                 }
@@ -173,16 +195,21 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
 
             @Override
             public void onFailure(Throwable t) {
-                CommonUtil.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTitle.setVisibility(View.VISIBLE);
-                        mImgStart.setImageResource(R.mipmap.splash);
-                    }
-                });
+                showNormalView();
             }
         });
 
+    }
+
+    //展示默认图
+    private void showNormalView() {
+        CommonUtil.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                mTitle.setVisibility(View.VISIBLE);
+                mImgStart.setImageResource(R.mipmap.splash);
+            }
+        });
     }
 
     /**
