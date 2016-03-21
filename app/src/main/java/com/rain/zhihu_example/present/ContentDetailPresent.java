@@ -44,13 +44,15 @@ public class ContentDetailPresent {
         @Override
         public void onCompleted() {
             //处理完成
+            if(BuildConfigUtil.DEBUG)
+                Log.d(TAG,"订阅完成");
         }
 
         @Override
         public void onError(Throwable e) {
             //加载失败
             if(BuildConfigUtil.DEBUG){
-                Log.e(ContentDetailPresent.TAG,e.toString());
+                Log.e(ContentDetailPresent.TAG,"加载失败:"+e.toString());
             }
             if(mView != null){
                 mView.setVebView(null);
