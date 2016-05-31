@@ -67,6 +67,7 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     }
 
     @Override
+    @SuppressWarnings("all")
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mTitleLayout.measure(0,0);

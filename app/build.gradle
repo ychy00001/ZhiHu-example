@@ -76,6 +76,8 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
     //数据库支持
     compile 'de.greenrobot:greendao:2.1.0'
-
+    //异步任务
+    compile 'com.path:android-priority-jobqueue:1.1.2'
     compile project(':library-sharesdk')
+    compile files('libs/universal-image-loader-1.9.4-with-sources.jar')
 }
