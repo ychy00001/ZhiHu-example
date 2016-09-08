@@ -1,0 +1,112 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--**************start! 自定义白天 夜间主题***********-->
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+    </style>
+    <!--application主题-->
+    <style name="AppTheme.NoActionBar">
+        <!--控制菜单字体颜色-->
+        <item name="colorPrimary">@color/text_Color_light</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--顶部状态栏变透明 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--application主题设置透明背景  需要每个Activity都有自己的背景定义
+        已注释 因为有可能启动的时候背景图上的文字先显示出来 用户体验也不高
+            <item name="android:windowIsTranslucent">true</item>
+            <item name="android:windowBackground">@color/transparent</item>
+        -->
+        <!--整体页面主题-->
+        <item name="ThemeBackgroundColor">@color/defaultBackground_light</item>
+        <item name="ThemeTextColor">@color/text_Color_light</item>
+
+        <!--导航 Toolbar-->
+        <item name="toolBar_gb_color">@color/toolbar_bg_color_light</item>
+        <item name="menu_color_mode">@string/action_dark_mode</item>
+        <item name="navigationView_bg">@drawable/side_nav_bar</item>
+        <item name="navigation_title_text_color">@color/navigation_title_text_color_light</item>
+
+        <!--通用-->
+        <item name="text_color_gray">@color/color_gray_light</item>
+        <item name="btn_bg">@drawable/select_btn_light</item>
+        <item name="text_color_dark_red">@color/color_dark_red_light</item>
+
+        <!--分享-->
+        <item name="ic_share_friend">@drawable/ic_share_friend_white</item>
+        <item name="ic_share_qq">@drawable/ic_share_qq_white</item>
+        <item name="ic_share_qzone">@drawable/ic_share_qzone_white</item>
+        <item name="ic_share_weibo">@drawable/ic_share_weibo_white</item>
+        <item name="ic_share_weixin">@drawable/ic_share_weixin_white</item>
+
+        <!--条目-->
+        <item name="selectorListItem">@drawable/item_bg_select_light</item>
+        <item name="titleColor">@color/text_Color_light</item>
+        <item name="cardview_background_color">@color/cardView_bg_light</item>
+
+        <!-- 登录页面 -->
+        <item name="bg_login">@mipmap/bg_login_white</item>
+    </style>
+
+    <!--白天 都是默认application的内容-->
+    <style name="AppTheme.Light" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/defaultBackground_light</item>
+    </style>
+
+    <!--黑夜-->
+    <style name="AppTheme.Dark" parent="AppTheme.NoActionBar">
+        <!--控制菜单字体颜色-->
+        <item name="colorPrimary">@color/color_gray_small</item>
+
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowBackground">@color/defaultBackground_dark</item>
+        <!--整体页面主题-->
+        <item name="ThemeBackgroundColor">@color/defaultBackground_dark</item>
+        <item name="ThemeTextColor">@color/text_Color_dark</item>
+
+        <!--导航 Toolbar-->
+        <item name="toolBar_gb_color">@color/toolbar_bg_color_dark</item>
+        <item name="menu_color_mode">@string/action_light_mode</item>
+        <item name="navigationView_bg">@color/color_black_small</item>
+        <item name="navigation_title_text_color">@color/navigation_title_text_color_dark</item>
+
+
+        <!--通用-->
+        <item name="text_color_gray">@color/color_gray_dark</item>
+        <item name="text_color_dark_red">@color/color_dark_red_dark</item>
+        <item name="btn_bg">@drawable/select_btn_dark</item>
+
+        <!--分享-->
+        <item name="ic_share_friend">@drawable/ic_share_friend_black</item>
+        <item name="ic_share_qq">@drawable/ic_share_qq_black</item>
+        <item name="ic_share_qzone">@drawable/ic_share_qzone_black</item>
+        <item name="ic_share_weibo">@drawable/ic_share_weibo_black</item>
+        <item name="ic_share_weixin">@drawable/ic_share_weixin_black</item>
+
+        <!--条目-->
+        <item name="selectorListItem">@drawable/item_bg_select_dark</item>
+        <item name="titleColor">@color/text_Color_dark</item>
+        <item name="cardview_background_color">@color/cardView_bg_dark</item>
+
+        <!-- 登录页面 -->
+        <item name="bg_login">@mipmap/bg_login_black</item>
+    </style>
+
+    <!--**************end! 自定义白天 夜间主题***********-->
+
+</resources>

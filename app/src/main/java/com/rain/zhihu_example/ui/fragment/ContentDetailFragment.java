@@ -26,6 +26,7 @@ import com.rain.zhihu_example.ui.base.BaseFragment;
 import com.rain.zhihu_example.ui.view.StoryView;
 import com.rain.zhihu_example.util.BuildConfigUtil;
 import com.rain.zhihu_example.util.ThemeUtil;
+import com.rain.zhihu_example.util.VersionCodeUtil;
 import com.rain.zhihu_example.widget.ScrollWebView;
 import com.squareup.picasso.Picasso;
 
@@ -51,7 +52,6 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     private int titleImgHeight;//头部imgView的高度
     private boolean isDark;
 
-
     public static ContentDetailFragment newInstance(Bundle bundle) {
         ContentDetailFragment mFragment = new ContentDetailFragment();
         mFragment.setArguments(bundle);
@@ -69,11 +69,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTitleLayout.measure(0,0);
+        mTitleLayout.measure(0, 0);
         mContentLayout.measure(0,0);
         titleImgHeight = mTitleLayout.getMeasuredHeight();
         mToolBar = ((ContentDetailActivity)getActivity()).getToolbar();
-
 
         WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setBlockNetworkImage(true);
@@ -164,9 +163,11 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
                 }else if((titleParam.height-dy) > titleImgHeight){//处理滑动速度过快 一下超出头部高度
                     titleParam.height = titleImgHeight;
                     ViewHelper.setAlpha(mToolBar,1);
+                    mToolBar.setVisibility(View.VISIBLE);//解决5.0中透明度为0还有边框
                 }else{
                     titleParam.height = 0;
                     ViewHelper.setAlpha(mToolBar,0);
+                    mToolBar.setVisibility(View.GONE);
                 }
             }else if(nowHeight == 0){//如果新的高度等于0 则显示完整的高度 还原
                 titleParam.height = titleImgHeight;
@@ -174,8 +175,10 @@ public class ContentDetailFragment extends BaseFragment implements StoryView {
                 titleParam.height = 0;
                 if(dy>0){
                     ViewHelper.setAlpha(mToolBar,0);
+                    mToolBar.setVisibility(View.GONE);
                 }else{
                     ViewHelper.setAlpha(mToolBar,1);
+                    mToolBar.setVisibility(View.VISIBLE);//解决5.0中透明度为0还有边框
                 }
             }
             mTitleLayout.setLayoutParams(titleParam);

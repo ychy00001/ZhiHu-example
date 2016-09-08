@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -13,6 +13,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--**************start! 自定义白天 夜间主题***********-->
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+    </style>
     <!--application主题-->
     <style name="AppTheme.NoActionBar">
         <!--控制菜单字体颜色-->
@@ -103,4 +105,10 @@
 
     <!--**************end! 自定义白天 夜间主题***********-->
 
+
+    <!--去掉AppBarLayout 的阴影效果-->
+    <style tools:override="true" name="Widget.Design.AppBarLayout" parent="android:Widget" >
+        <item name="elevation">0dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
 </resources>

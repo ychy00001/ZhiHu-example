@@ -148,13 +148,7 @@ public class MainActivity extends BaseShareActivity
         mLayoutNothing.setOnClickListener(this);
         mLayoutLogin.setOnClickListener(this);
     }
-    /**
-     * 浮动按钮点击
-     */
-    @OnClick(R.id.fab)
-    void fabClick() {
-        showExitDialog();
-    }
+
 
     @SuppressWarnings("deprecation")
     private void showExitDialog() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#0097A7</color>
+    <color name="colorPrimaryDark">#3f88df</color>
     <color name="colorAccent">#FF4081</color>
 
     <!--*******************************-白天-********************************-->
@@ -11,8 +11,8 @@
     <color name="item_bg_def_light">#ffffff</color>
     <color name="item_bg_press_light">#CCCCCC</color>
     <color name="cardView_bg_light">#ffffff</color>
-    <!--头部ToolBar条-->
-    <color name="toolbar_bg_color_light">#27adec</color>
+    <!--头部ToolBar条 00BCD4 27ADEC -->
+    <color name="toolbar_bg_color_light">#27ADEC</color>
     <color name="navigation_title_text_color_light">#ffffff</color>
 
 
