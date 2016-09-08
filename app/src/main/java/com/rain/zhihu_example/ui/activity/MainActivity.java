@@ -112,10 +112,13 @@ public class MainActivity extends BaseShareActivity
     private void initFragment() {
         isSubscribeMenu = false;
         isNoRightMenu = false;
+
         mFragment = MainFragment.newInstance(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mFragment, MainFragment.TAG)
                 .commit();
+        //重新请求菜单
+        invalidateOptionsMenu();
     }
 
     /**

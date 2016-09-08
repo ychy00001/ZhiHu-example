@@ -23,7 +23,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:configChanges="orientation|keyboardHidden|screenSize">
+        android:screenOrientation="portrait">
 
         <!--!start shareSdk组件-->
         <activity
@@ -60,9 +60,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.MainActivity"/>
-        <activity android:name=".ui.activity.ContentDetailActivity"/>
-        <activity android:name=".ui.activity.LoginActivity"/>
+        <activity android:name=".ui.activity.MainActivity"
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleTask" />
+        <activity android:name=".ui.activity.ContentDetailActivity"
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleTask" />
+        <activity android:name=".ui.activity.LoginActivity"
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleTask" />
     </application>
 
 </manifest>

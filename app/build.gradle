@@ -76,5 +76,6 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta3'
     //数据库支持
     compile 'de.greenrobot:greendao:2.1.0'
+
     compile project(':library-sharesdk')
 }
